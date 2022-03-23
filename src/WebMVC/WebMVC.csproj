@@ -7,4 +7,8 @@
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     </PropertyGroup>
 
+    <ItemGroup>
+      <AdditionalFiles Include="Views\Shared\Admin\_Layout.cshtml" />
+    </ItemGroup>
+
 </Project>
