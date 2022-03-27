@@ -1,6 +1,5 @@
 using Domain.Entities;
 using Infrastructure.Database;
-using Microsoft.AspNetCore.Identity;
 using WebMVC.Extentions;
 
 
@@ -8,7 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-builder.Services.AddIdentity<User, IdentityRole>()
+builder.Services.AddIdentity<User, Role>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 // Extentions
 builder.Services
