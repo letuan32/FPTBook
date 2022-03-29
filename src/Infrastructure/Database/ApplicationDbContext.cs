@@ -46,6 +46,12 @@ namespace Infrastructure.Database
                 .HasData(
                     new Role()
                     {
+                      Id= 100,
+                      Name = RoleConstant.Admin,
+                      NormalizedName = RoleConstant.Admin.ToUpper()
+                    },
+                    new Role()
+                    {
                         Id = 101,
                         Name = RoleConstant.StoreOwner,
                         NormalizedName = RoleConstant.StoreOwner.ToUpper()
