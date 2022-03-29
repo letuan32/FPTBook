@@ -1,6 +1,7 @@
 ﻿#nullable disable
 using Domain.Entities;
 using Infrastructure.Configurations;
+using Infrastructure.Utils;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -36,7 +37,25 @@ namespace Infrastructure.Database
             builder.ApplyConfiguration(new CategoryEntityConfiguration());
             builder.ApplyConfiguration(new OrderEntityConfiguration());
             builder.ApplyConfiguration(new OrderItemEntityConfiguration());
+            this.SeedRoles(builder);
+        }
 
+        private void SeedRoles(ModelBuilder builder)
+        {
+            builder.Entity<Role>()
+                .HasData(
+                    new Role()
+                    {
+                        Id = 101,
+                        Name = RoleConstant.StoreOwner,
+                        NormalizedName = RoleConstant.StoreOwner.ToUpper()
+                    },
+                    new Role()
+                    {
+                        Id = 102,
+                        Name = RoleConstant.Customer,
+                        NormalizedName = RoleConstant.Customer.ToUpper()
+                    });
         }
 
     }
