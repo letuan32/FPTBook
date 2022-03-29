@@ -18,7 +18,8 @@ namespace Domain.Entities
         public int CategoryId { get; set; }
         public DateTime CreatedOn { get; set; }
         public int CreatedBy { get; set; }
-
+        
+        public string ImageUrl { get; set; }
         public virtual Category Category { get; set; }
         public virtual ICollection<OrderItem> OrderItem { get; set; }
     }
