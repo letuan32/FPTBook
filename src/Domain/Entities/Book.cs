@@ -16,9 +16,10 @@ namespace Domain.Entities
         public int Price { get; set; }
         public int Quantity { get; set; }
         public int CategoryId { get; set; }
-        public DateTime CreatedOn { get; set; }
+        public DateTime CreatedOn { get; set; } = DateTime.Now;
         public int CreatedBy { get; set; }
-
+        
+        public string ImageUrl { get; set; }
         public virtual Category Category { get; set; }
         public virtual ICollection<OrderItem> OrderItem { get; set; }
     }

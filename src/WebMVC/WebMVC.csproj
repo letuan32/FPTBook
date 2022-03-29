@@ -28,4 +28,8 @@
       <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Include="wwwroot\jsonData\categories.json" />
+    </ItemGroup>
+
 </Project>
