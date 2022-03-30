@@ -39,34 +39,12 @@ namespace Infrastructure.Database
             builder.ApplyConfiguration(new CategoryEntityConfiguration());
             builder.ApplyConfiguration(new OrderEntityConfiguration());
             builder.ApplyConfiguration(new OrderItemEntityConfiguration());
-            this.SeedRoles(builder);
-            SeedResourceData.SeedCategories(builder);
-            SeedResourceData.SeedBooks(builder);
             
+            SeedResourceData.Seeds(builder);
+            SeedIdentity.Seeds(builder);
         }
 
-        private void SeedRoles(ModelBuilder builder)
-        {
-            builder.Entity<Role>()
-                .HasData(
-                    new Role()
-                    {
-                      Id= 100,
-                      Name = RoleConstant.Admin,
-                      NormalizedName = RoleConstant.Admin.ToUpper()
-                    },
-                    new Role()
-                    {
-                        Id = 101,
-                        Name = RoleConstant.StoreOwner,
-                        NormalizedName = RoleConstant.StoreOwner.ToUpper()
-                    },
-                    new Role()
-                    {
-                        Id = 102,
-                        Name = RoleConstant.Customer,
-                        NormalizedName = RoleConstant.Customer.ToUpper()
-                    });
-        }
+        
+        
     }
 }

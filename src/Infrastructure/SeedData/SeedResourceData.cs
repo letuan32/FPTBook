@@ -6,7 +6,12 @@ namespace Infrastructure.SeedData;
 
   public static class SeedResourceData
     {
-        public static void SeedCategories(ModelBuilder builder)
+        public static void Seeds(ModelBuilder builder)
+        {
+            SeedCategories(builder);
+            SeedBooks(builder);
+        }
+        private static void SeedCategories(ModelBuilder builder)
         { 
             var categories = new List<Category>();
           using (StreamReader r = new StreamReader("./wwwroot/jsonData/categories.json"))
@@ -18,7 +23,7 @@ namespace Infrastructure.SeedData;
               .HasData(categories);
         }
 
-        public static void SeedBooks(ModelBuilder builder)
+        private static void SeedBooks(ModelBuilder builder)
         {
             var books = new List<Book>();
             using (StreamReader r = new StreamReader("./wwwroot/jsonData/books.json"))
