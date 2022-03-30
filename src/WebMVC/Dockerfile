@@ -21,4 +21,4 @@ FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "WebMVC.dll"]
-CMD ASPNETCORE_URLS=http://*:$PORT dotnet app-dev-mvc.dll
+CMD ASPNETCORE_URLS=http://*:$PORT dotnet WebMVC.dll

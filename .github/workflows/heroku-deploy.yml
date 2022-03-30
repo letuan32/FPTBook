@@ -3,7 +3,7 @@ name: deploy to heroku
 on:
   push:
     paths:
-      - '**/app-dev-mvc/**'
+      - '**/src/**'
       - '**/Dockerfile'
 #    branches:
 #      - master
