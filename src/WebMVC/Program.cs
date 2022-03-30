@@ -1,5 +1,7 @@
+using System.Diagnostics;
 using Domain.Entities;
 using Infrastructure.Database;
+using Infrastructure.SeedData;
 using WebMVC.Extentions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -18,7 +20,11 @@ builder.Services
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
+
+
 var app = builder.Build();
+
+// Seed Account
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
