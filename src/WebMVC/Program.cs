@@ -1,6 +1,7 @@
 
 using Domain.Entities;
 using Infrastructure.Database;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 
@@ -32,7 +33,8 @@ else
 
 
 builder.Services.AddIdentity<User, Role>()
-    .AddEntityFrameworkStores<ApplicationDbContext>();
+    .AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddDefaultUI();
 
 
 builder.Services.AddControllersWithViews();
@@ -62,17 +64,22 @@ app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
+//
+// app.UseEndpoints(endpoints =>
+// {
+//     endpoints.MapAreaControllerRoute(
+//         name: "Store",
+//         areaName: "Store",
+//         pattern: "Store/{controller=Home}/{action=Index}/{id?}");
+//     endpoints.MapControllerRoute(
+//         name: "default",
+//         pattern: "{controller=Home}/{action=Index}/{id?}");
+//
+//     endpoints.MapRazorPages();
+// });
 
-app.UseEndpoints(endpoints =>
-{
-    endpoints.MapAreaControllerRoute(
-        name: "Store",
-        areaName: "Store",
-        pattern: "Store/{controller=Home}/{action=Index}/{id?}");
-    endpoints.MapControllerRoute(
-        name: "default",
-        pattern: "{controller=Home}/{action=Index}/{id?}");
-
-    endpoints.MapRazorPages();
-});
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}");
+app.MapRazorPages();
 app.Run();
