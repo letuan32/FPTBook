@@ -87,8 +87,8 @@ public class IndexModel : PageModel
                 return RedirectToPage();
             }
         }
-
-
+        user.Address = Input.Address;
+        await _userManager.UpdateAsync(user);
         await _signInManager.RefreshSignInAsync(user);
         StatusMessage = "Your profile has been updated";
         return RedirectToPage();
@@ -108,6 +108,6 @@ public class IndexModel : PageModel
         [Display(Name = "Phone number")]
         public string PhoneNumber { get; set; }
 
-        [Phone] [Display(Name = "Address")] public string Address { get; set; }
+        [Display(Name = "Address")] public string Address { get; set; }
     }
 }
