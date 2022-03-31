@@ -6,7 +6,8 @@ on:
       - '**/src/**'
       - '**/Dockerfile'
     branches:
-      - master
+      - release
+      
 
 jobs:
   build:
