@@ -15,7 +15,7 @@ if (env.IsDevelopment())
 }
 else
 {
-    string? connectionUrl = Environment.GetEnvironmentVariable("HEROKU_DATABASE_URL");
+    string? connectionUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
     
         var databaseUri = new Uri(connectionUrl);
         string db = databaseUri.LocalPath.TrimStart('/');
