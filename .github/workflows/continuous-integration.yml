@@ -34,10 +34,8 @@ jobs:
       - name: Build app 🚀
         run: dotnet build -c Release --no-restore
 
-#      - name: Unit Test ✅✅✅✅
-#        env:
-#          ConnectionStrings__TestDbConnection: Server=localhost,1440;Database=appdev;User=sa;Password=Db@123123
-#        run:  dotnet test -c Release --no-build
+      - name: Unit Test ✅✅✅✅
+        run:  dotnet test -c Release --no-build
 
       - name: Publish app
         run: dotnet publish -c Release -o ./app
