@@ -7,9 +7,7 @@
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     </PropertyGroup>
 
-    <ItemGroup>
-      <AdditionalFiles Include="Views\Shared\Admin\_Layout.cshtml" />
-    </ItemGroup>
+  
 
     <ItemGroup>
       <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
@@ -27,6 +25,7 @@
       </PackageReference>
       <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
       <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.2" />
+      <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="6.0.3" />
     </ItemGroup>
 
     <ItemGroup>
@@ -34,8 +33,5 @@
       <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <None Include="wwwroot\jsonData\categories.json" />
-    </ItemGroup>
-
+  
 </Project>
