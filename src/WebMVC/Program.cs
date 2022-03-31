@@ -1,9 +1,6 @@
-using System.Diagnostics;
+
 using Domain.Entities;
 using Infrastructure.Database;
-using Infrastructure.SeedData;
-
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 
@@ -36,9 +33,6 @@ else
 
 builder.Services.AddIdentity<User, Role>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
-// Extentions
-// builder.Services
-//     .AddDatabase(builder.Configuration);
 
 
 builder.Services.AddControllersWithViews();
