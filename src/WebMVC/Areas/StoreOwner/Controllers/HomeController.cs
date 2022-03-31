@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using WebMVC.Models;
+using WebMVC.Services;
 
 namespace WebMVC.Areas.Store.Controllers;
 
@@ -8,11 +9,11 @@ namespace WebMVC.Areas.Store.Controllers;
 
 public class HomeController : Controller
 {
-    private readonly ILogger<HomeController> _logger;
+    private readonly CategoryService categoryService;
 
-    public HomeController(ILogger<HomeController> logger)
+    public HomeController(CategoryService categoryService)
     {
-        _logger = logger;
+        this.categoryService = categoryService;
     }
 
     public IActionResult Index()

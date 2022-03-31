@@ -56,22 +56,11 @@ app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
-//
-// app.UseEndpoints(endpoints =>
-// {
-//     endpoints.MapAreaControllerRoute(
-//         name: "Store",
-//         areaName: "Store",
-//         pattern: "Store/{controller=Home}/{action=Index}/{id?}");
-//     endpoints.MapControllerRoute(
-//         name: "default",
-//         pattern: "{controller=Home}/{action=Index}/{id?}");
-//
-//     endpoints.MapRazorPages();
-// });
 
+// Routing
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
 app.MapRazorPages();
 app.Run();
