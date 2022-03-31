@@ -8,7 +8,7 @@ WORKDIR /src
 COPY ["WebMVC/WebMVC.csproj", "WebMVC/"]
 COPY ["Domain/Domain.csproj", "Domain/"]
 COPY ["Infrastructure/Infrastructure.csproj", "Infrastructure/"]
-RUN dotnet restore "/WebMVC/WebMVC.csproj"
+RUN dotnet restore "WebMVC/WebMVC.csproj"
 COPY . .
 WORKDIR "WebMVC"
 RUN dotnet build "WebMVC.csproj" -c Release -o /app/build 
