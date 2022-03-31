@@ -50,7 +50,8 @@ public static  class SeedIdentity
         storeOwner201.NormalizedUserName = "storeowner201@gmail.com".ToUpper();
         storeOwner201.Id = 201;
         storeOwner201.PasswordHash = hasher.HashPassword(null, "Default@123");
-        
+        storeOwner201.SecurityStamp = Guid.NewGuid().ToString("D");
+
         // StoreOwner with Id 201
         var storeOwner202 = new User();
         storeOwner202.UserName = "storeowner202@gmail.com";
@@ -60,6 +61,7 @@ public static  class SeedIdentity
         storeOwner202.NormalizedUserName = "storeowner202@gmail.com".ToUpper();
         storeOwner202.Id = 202;
         storeOwner202.PasswordHash = hasher.HashPassword(null, "Default@123");
+        storeOwner202.SecurityStamp = Guid.NewGuid().ToString("D");
 
         // Admin 
         var admin = new User();
@@ -70,7 +72,8 @@ public static  class SeedIdentity
         admin.NormalizedUserName = "admin@gmail.com".ToUpper();
         admin.Id = 999;
         admin.PasswordHash = hasher.HashPassword(null, "Default@123");
-        
+        admin.SecurityStamp = Guid.NewGuid().ToString("D");
+
         // Customer
         var customer = new User();
         customer.UserName = "customer@gmail.com";
@@ -80,7 +83,8 @@ public static  class SeedIdentity
         customer.NormalizedUserName = "customer@gmail.com".ToUpper();
         customer.Id = 100;
         customer.PasswordHash = hasher.HashPassword(null, "Default@123");
-        
+        customer.SecurityStamp = Guid.NewGuid().ToString("D");
+
         
         builder.Entity<User>().HasData(
             admin,
