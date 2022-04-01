@@ -1,18 +1,16 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using WebMVC.Models;
-using WebMVC.Services;
 
-namespace WebMVC.Areas.StoreOwner.Controllers;
-
-[Area("StoreOwner")]
+namespace WebMVC.Controllers;
 
 public class HomeController : Controller
 {
-    
-    public HomeController()
+    private readonly ILogger<HomeController> _logger;
+
+    public HomeController(ILogger<HomeController> logger)
     {
-        
+        _logger = logger;
     }
 
     public IActionResult Index()

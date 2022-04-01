@@ -1,0 +1,167 @@
+@using Microsoft.EntityFrameworkCore.Metadata.Internal
+@model WebMVC.Models.Common.PaginatedList<WebMVC.Models.Books.Responses.BookIndexVm>
+
+
+<table class="table table-image text-center">
+                <thead>
+                <tr>
+                    <th class="align-middle" scope="col">Image</th>
+                    <th class="align-middle" scope="col">Title</th>
+                    <th class="align-middle" scope="col">Quantity</th>
+                    <th class="align-middle" scope="col">Price</th>
+                    <th class="align-middle" scope="col">
+                        Total Sales
+                    </th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+
+                        <td class="align-middle">
+                            <img width="100" src="@item.ImageUrl"/>
+                        </td>
+                        <td class="align-middle">@item.Name</td>
+                        <td class="align-middle">@item.Quantity</td>
+                        <td class="align-middle">@item.Price VND</td>
+                        <td class="align-middle">@item.TotalSales</td>
+                        <td class="align-middle">
+                            <div class="text-center">
+                                <a href="#" style="cursor:pointer">
+                                    <i class=""></i>Button
+                                </a>
+                                <a href="#" style="cursor:pointer">
+                                    <i class=""></i>Button
+                                </a>
+                                <a href="#">
+                                    <i class=""></i>Button
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+
+                </tbody>
+            </table>
+            @{
+                var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+                var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+            }
+            <nav aria-label="Page navigation example">
+            <ul class="pagination"> 
+                <li class="page-item">
+                    @if (ViewBag.PageNumber > 1)
+                    {
+                        <li class="page-item"><a class="page-link" href="#">Anterior</a></li>
+                    }
+                    else
+                    {
+                        <li class="page-item"><a class="page-link" href="#">
+                            <span aria-hidden="true">&laquo;</span>
+                            <span class="sr-only">Previous</span>
+                        </a></li>
+                        
+                    }
+                </li>
+
+                @{
+                    var currentPage = (int)ViewData["CurrentPage"];
+                    var cr = ViewBag.CurrentPage;
+
+                    // How many pages views right or left of currentPage
+                    const int PageLeft = 2;
+                    const int PagesRight = 2;
+
+                    // get first page befor ...
+                    var fromPage = Math.Max(1, currentPage - PageLeft);
+
+                    // get last page after ...
+                    var toPage = Math.Min(Model.TotalPages, currentPage + PagesRight);
+
+                    if (Model.TotalPages - toPage == 1)
+                    {
+                        toPage = Model.TotalPages;
+                    }
+
+                    if (fromPage > 1)
+                    {
+                        // view First page
+                        <li class="page-item"><a class="page-link" href="#">1</a></li>
+
+                        if (fromPage > 2)
+                        {
+                            // view first ...
+                            // calculate number page for link ..., it's middle between first page and fromPage
+                            var middleNumber = (int) Math.Ceiling((double) (fromPage - 2) / 2) + 1;
+                            <li class="page-item">
+                                <a class="page-link" href="#">...</a>
+                            </li>
+                        }
+                    }
+
+
+                    // view paginator between currentPage
+                    for (var i = fromPage; i <= toPage; i++)
+                    {
+                        <li class="page-item" @Html.Raw(currentPage == i ? "class=\"page-item active\"" : "") )>
+                            <a class="page-link" href="#">@i</a>
+                        </li>
+                    }
+
+
+                    // view second ...
+                    if (toPage < Model.TotalPages)
+                    {
+                        var middleNumber = (int) Math.Ceiling((double) (Model.TotalPages - toPage) / 2) + toPage;
+                        <li class="page-item">
+                            <a class="page-link" href="#">...</a>
+                        </li>
+                        // view last page
+                        if (toPage < Model.TotalPages - 1)
+                        {
+                            <li class="page-item">
+                                <a class="page-link" href="">@Model.TotalPages</a>
+                            </li>
+                        }
+                    }
+
+                }
+
+                <li class="page-item">
+                @if (ViewBag.PageNumber < ViewBag.Total)
+                {
+                    <a class="page-link" href="">
+                           <span aria-hidden="true">&raquo;</span>
+                                <span class="sr-only">Next</span>
+                    </a>
+                }
+                else
+                {
+                    <a class="page-item disabled">
+                        <span class="page-link">Next</span>
+                    </a>
+                }
+            </ul>
+            </nav>
+            <a asp-action="Index"
+               asp-route-sortOrder="@ViewData["CurrentSort"]"
+               asp-route-pageNumber="@(Model.PageIndex - 1)"
+               asp-route-currentFilter="@ViewData["CurrentFilter"]"
+               class="btn btn-default @prevDisabled">
+                Previous
+            </a>
+
+            <a asp-action="Index"
+               asp-route-sortOrder="@ViewData["CurrentSort"]"
+               asp-route-pageNumber="@(Model.PageIndex + 1)"
+               asp-route-currentFilter="@ViewData["CurrentFilter"]"
+               class="btn btn-default @nextDisabled">
+                Next
+            </a>
+            <form class="form-inline">
+                <label class="sr-only">Page</label>
+                <input type="text" class="form-control mb-2 mr-sm-2" placeholder="Go to page">
+                <button type="submit" class="btn btn-primary mb-2">Submit</button>
+            </form>

@@ -1,4 +1,5 @@
 
+using System.Reflection;
 using Domain.Entities;
 using Infrastructure.Database;
 using Microsoft.AspNetCore.Identity;
@@ -23,6 +24,7 @@ else
         });
 }
 ServiceExtensions.AddDbContext(connectionUrl, builder);
+ServiceExtensions.AddServices(builder);
 
 builder.Services.AddIdentity<User, Role>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
@@ -31,6 +33,7 @@ builder.Services.AddIdentity<User, Role>()
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
+
 
 
 var app = builder.Build();
@@ -58,9 +61,17 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 // Routing
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapAreaControllerRoute(
+        name: "StoreOwner",
+        areaName: "StoreOwner",
+        pattern: "StoreOwner/{controller=Home}/{action=Index}/{id?}");
+    endpoints.MapControllerRoute(
+        name: "default",
+        pattern: "{controller=Home}/{action=Index}/{id?}");
 
+    endpoints.MapRazorPages();
+});
 app.MapRazorPages();
 app.Run();
