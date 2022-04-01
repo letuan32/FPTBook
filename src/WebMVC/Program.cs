@@ -1,36 +1,30 @@
 
+using System.Reflection;
 using Domain.Entities;
 using Infrastructure.Database;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using WebMVC.Extensions;
 
 
 var builder = WebApplication.CreateBuilder(args);
 var env = builder.Environment;
-var connectionString = string.Empty;
+
+string? connectionUrl;
 if (env.IsDevelopment())
 {
-    connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-    builder.Services.AddDbContext<ApplicationDbContext>(options =>
-        options.UseNpgsql(connectionString));
+    connectionUrl = builder.Configuration.GetConnectionString("DefaultConnectionUrl");
 }
 else
 {
-    string? connectionUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
-    
-        var databaseUri = new Uri(connectionUrl);
-        string db = databaseUri.LocalPath.TrimStart('/');
-        string[] userInfo = databaseUri.UserInfo.Split(':', StringSplitOptions.RemoveEmptyEntries);
-        connectionString =
-            $"User ID={userInfo[0]};Password={userInfo[1]};Host={databaseUri.Host};Port={databaseUri.Port};Database={db};Pooling=true;SSL Mode=Require;Trust Server Certificate=True;";
-        builder.Services.AddDbContext<ApplicationDbContext>(options =>
-            options.UseNpgsql(connectionString));
+        connectionUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
         builder.WebHost.ConfigureKestrel(options =>
         {
-            options.ListenAnyIP(Int32.Parse(Environment.GetEnvironmentVariable("PORT"))); // to listen for incoming http connection on port 5001
+            options.ListenAnyIP(Int32.Parse(Environment.GetEnvironmentVariable("PORT")));
         });
 }
-
+ServiceExtensions.AddDbContext(connectionUrl, builder);
+ServiceExtensions.AddServices(builder);
 
 builder.Services.AddIdentity<User, Role>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
@@ -39,6 +33,7 @@ builder.Services.AddIdentity<User, Role>()
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
+
 
 
 var app = builder.Build();
@@ -64,22 +59,19 @@ app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
-//
-// app.UseEndpoints(endpoints =>
-// {
-//     endpoints.MapAreaControllerRoute(
-//         name: "Store",
-//         areaName: "Store",
-//         pattern: "Store/{controller=Home}/{action=Index}/{id?}");
-//     endpoints.MapControllerRoute(
-//         name: "default",
-//         pattern: "{controller=Home}/{action=Index}/{id?}");
-//
-//     endpoints.MapRazorPages();
-// });
 
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+// Routing
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapAreaControllerRoute(
+        name: "StoreOwner",
+        areaName: "StoreOwner",
+        pattern: "StoreOwner/{controller=Home}/{action=Index}/{id?}");
+    endpoints.MapControllerRoute(
+        name: "default",
+        pattern: "{controller=Home}/{action=Index}/{id?}");
+
+    endpoints.MapRazorPages();
+});
 app.MapRazorPages();
 app.Run();
