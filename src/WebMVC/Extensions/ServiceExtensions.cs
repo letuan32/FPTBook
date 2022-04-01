@@ -1,3 +1,4 @@
+using Domain.Entities;
 using Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;
 using WebMVC.Services;
@@ -22,5 +23,6 @@ public static class ServiceExtensions
     {
         builder.Services
             .AddScoped<IServiceBase, CategoryService>();
+        builder.Services.AddScoped<IBookService, BookService>();
     }
 }

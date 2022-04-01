@@ -1,0 +1,16 @@
+@model WebMVC.Models.Common.PaginatedList<WebMVC.Models.Books.Responses.BookIndexVm>
+
+@{
+    ViewBag.Title = "Book management";
+
+}
+<div class="row justify-content-center">
+    <div class="col-auto">
+        <div class="table-responsive">
+            @{
+                await Html.RenderPartialAsync("Book/_BookIndexPartial", Model);
+            }
+           
+        </div>
+    </div>
+</div>
