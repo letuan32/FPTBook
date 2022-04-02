@@ -4,13 +4,9 @@
     ViewBag.Title = "Book management";
 
 }
-<div class="row justify-content-center">
-    <div class="col-auto">
-        <div class="table-responsive">
-            @{
+<div class="container">
+    @{
                 await Html.RenderPartialAsync("Book/_BookIndexPartial", Model);
             }
-           
-        </div>
-    </div>
 </div>
+
