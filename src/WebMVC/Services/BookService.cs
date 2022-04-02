@@ -8,6 +8,7 @@ using WebMVC.Models.Books.Utils;
 using WebMVC.Models.Common;
 using WebMVC.Services.Base;
 using WebMVC.ViewModels.Books.Requests;
+using WebMVC.ViewModels.Books.Utils;
 
 namespace WebMVC.Services;
 
@@ -25,37 +26,13 @@ public class BookService:IBookService
     public async Task<PaginatedList<BookIndexVm>> GetBookIndexAsync(GetBookIndexRequest request)
     {
         var queryable = _context.Book.AsQueryable();
-       // Check filter by category option
-        if (request.FilterOption.HasValue)
-        {
-            queryable = queryable.Where(book => book.CategoryId == request.FilterOption.Value);
-        }
-        
-        // Check search string
-        if (String.IsNullOrEmpty(request.SearchString))
-        {
-            request.Page = 1;
-        }
-        else
-        {
-            request.SearchString = request.CurrentSearch;
-        }
-        // Filter by search string
-        if (!String.IsNullOrEmpty(request.SearchString))
-        {
-            queryable = queryable.Where(book =>
-                book.Name.Contains(request.SearchString, StringComparison.CurrentCultureIgnoreCase));
-        }
-        
+      
+        queryable = FilterQuery(request, queryable);
         // Sort
-        switch (request.SortOrder)
-        {
-            
-        }
+        queryable = SortingQuery(request, queryable);
         var totalCount = queryable.Count();
-        queryable = PaginatedList<Book>.CreatePangingQueryAsync(queryable, request.Page??1, BookPagingOption.PageSize);
-
-       
+        queryable = PaginatedList<Book>.CreatePangingQueryAsync(queryable, request.PageNumber??1, BookIndexOption.PageSize);
+        
         var bookIndexVms = await queryable.Select(x => new BookIndexVm
         {
             Id = x.Id,
@@ -63,12 +40,73 @@ public class BookService:IBookService
             Price = x.Price,
             ImageUrl = x.ImageUrl,
             Quantity = x.Quantity,
-            // TotalSales = GetBookTotalSales(x.Id).Result
+            TotalSales = x.OrderItem.Count
 
         }).ToListAsync();
 
-        return await PaginatedList<BookIndexVm>.GetPagingResult(bookIndexVms, totalCount, request.Page ?? 1,
-            BookPagingOption.PageSize);
+        return await PaginatedList<BookIndexVm>.GetPagingResult(bookIndexVms, totalCount, request.PageNumber ?? 1,
+            BookIndexOption.PageSize);
+    }
+
+    private static IQueryable<Book> FilterQuery(GetBookIndexRequest request, IQueryable<Book> queryable)
+    {
+        if (request.FilterOption.HasValue)
+        {
+            queryable = queryable.Where(book => book.CategoryId == request.FilterOption.Value);
+        }
+
+        // Check search string
+        if (!String.IsNullOrEmpty(request.SearchString))
+        {
+            request.PageNumber = 1;
+        }
+        else
+        {
+            request.SearchString = request.CurrentSearch;
+        }
+
+        // Filter by search string
+        if (!String.IsNullOrEmpty(request.SearchString))
+        {
+            queryable = queryable.Where(book =>
+                book.Name.ToLower().Contains(request.SearchString));
+        }
+
+        return queryable;
+    }
+
+    private static IQueryable<Book> SortingQuery(GetBookIndexRequest request, IQueryable<Book> queryable)
+    {
+        switch (request.SortOrder)
+        {
+            case BookIndexOption.NameSort:
+                queryable = queryable.OrderBy(x => x.Name);
+                break;
+            case BookIndexOption.NameSortDesc:
+                queryable = queryable.OrderByDescending(x => x.Name);
+                break;
+
+            case BookIndexOption.PriceSort:
+                queryable = queryable.OrderBy(x => x.Price);
+                break;
+            case BookIndexOption.PriceSortDesc:
+                queryable = queryable.OrderByDescending(x => x.Price);
+                break;
+            case BookIndexOption.QuantitySort:
+                queryable = queryable.OrderBy(x => x.Quantity);
+                break;
+            case BookIndexOption.QuantitySortDesc:
+                queryable = queryable.OrderByDescending(x => x.Quantity);
+                break;
+            case BookIndexOption.TotalSalesSort:
+                queryable = queryable.OrderBy(x => x.OrderItem.Count);
+                break;
+            default:
+                queryable = queryable.OrderBy(x => x.Name);
+                break;
+        }
+
+        return queryable;
     }
 
     public async Task<List<SelectListItem>> BookFilterOptionByCategoryAsync()
