@@ -1,4 +1,4 @@
-@model WebMVC.Models.Common.PaginatedList<WebMVC.Models.Books.Responses.BookIndexVm>
+@model WebMVC.ViewModels.Books.Responses.BookIndexVm
 
 @{
     ViewBag.Title = "Book management";
@@ -6,7 +6,6 @@
 }
 <div class="container">
     @{
-                await Html.RenderPartialAsync("Book/_BookIndexPartial", Model);
-            }
+        await Html.RenderPartialAsync("Book/_BookIndexPartial", Model);
+    }
 </div>
-
