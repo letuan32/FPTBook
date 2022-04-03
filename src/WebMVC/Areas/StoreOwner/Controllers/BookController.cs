@@ -40,7 +40,7 @@ public class BookController : Controller
             PaginationInfo = new PaginationInfo
             {
                 ActualPage = request.PageNumber ?? 1,
-                TotalItems = books.TotalPages,
+                TotalItems = books.TotalItems,
                 ItemsPerPage = books.Count,
                 TotalPages = books.TotalPages,
                 Next = books.HasNextPage,
