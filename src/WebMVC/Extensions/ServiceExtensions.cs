@@ -24,5 +24,8 @@ public static class ServiceExtensions
         builder.Services
             .AddScoped<IServiceBase, CategoryService>();
         builder.Services.AddScoped<IBookService, BookService>();
+        // Automapper
+        builder.Services.AddAutoMapper(typeof(Program).Assembly);
+        builder.Services.AddScoped<IFileStorageService, FileStorageService>();
     }
 }

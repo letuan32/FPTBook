@@ -1,11 +1,15 @@
+using AutoMapper;
 using Domain.Entities;
 using Infrastructure.Database;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.CodeAnalysis.Operations;
 using Microsoft.EntityFrameworkCore;
 using WebMVC.Models.Books.Requests;
 using WebMVC.Models.Books.Responses;
 using WebMVC.Models.Common;
 using WebMVC.Services.Base;
+using WebMVC.Utils;
 using WebMVC.ViewModels.Books.Requests;
 using WebMVC.ViewModels.Books.Responses;
 using WebMVC.ViewModels.Books.Utils;
@@ -15,11 +19,16 @@ namespace WebMVC.Services;
 public class BookService : IBookService
 {
     private readonly ApplicationDbContext _context;
+    private readonly IFileStorageService _fileStorageService;
+    private readonly IMapper _mapper;
+    
 
 
-    public BookService(ApplicationDbContext context)
+    public BookService(ApplicationDbContext context,IMapper mapper, IFileStorageService fileStorageService)
     {
         _context = context;
+        _mapper = mapper;
+        _fileStorageService = fileStorageService;
     }
 
     public async Task<PaginatedList<BookIndexItemVm>> GetBookIndexAsync(GetBookIndexRequest request)
@@ -47,7 +56,7 @@ public class BookService : IBookService
             BookIndexOption.PageSize);
     }
 
-    public async Task<List<SelectListItem>> BookFilterOptionByCategoryAsync()
+    public async Task<List<SelectListItem>> GetCategoryTypesAsync()
     {
         return await _context.Category
             .Select(c => new SelectListItem
@@ -58,12 +67,25 @@ public class BookService : IBookService
             .AsNoTracking().ToListAsync();
     }
 
-    public Task<int> AddSingleAsync(BookAddVm bookAddVm)
+    public async Task<int> AddSingleAsync(BookAddVm bookAddVm)
     {
-        throw new NotImplementedException();
+        
+        var book = _mapper.Map<BookAddVm, Book>(bookAddVm);
+        if (bookAddVm.ImageFile!=null)
+        {
+            var bookImagePath =
+                await _fileStorageService.SaveFileAsync(bookAddVm.ImageFile, ResourcePath.BookImageDirectory);
+            book.ImageUrl = bookImagePath;
+        }
+       
+        await _context.Book.AddAsync(book);
+        var result = await _context.SaveChangesAsync();
+        return result;
+
+
     }
 
-    public Task<int> UpdateSingleAsync(BookUpdateVm bookUpdateVm)
+    public async Task<int> UpdateSingleAsync(BookUpdateVm bookUpdateVm)
     {
         throw new NotImplementedException();
     }
@@ -137,5 +159,10 @@ public class BookService : IBookService
         }
 
         return queryable;
+    }
+
+    private async Task<Book?> GetBookByIdAsync(int id)
+    {
+        return await _context.Book.SingleOrDefaultAsync(x => x.Id == id);
     }
 }

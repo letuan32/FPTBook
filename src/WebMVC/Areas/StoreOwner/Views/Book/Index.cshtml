@@ -5,7 +5,11 @@
 
 }
 <div class="container">
-    @{
-        await Html.RenderPartialAsync("Book/_BookIndexPartial", Model);
-    }
+    <div>
+        @{
+            await Html.RenderPartialAsync("Book/_BookIndexPartial", Model);
+        }
+    </div>
 </div>
+
+
