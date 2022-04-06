@@ -5,7 +5,7 @@
 
 
 <div class="col-md-12 col-md-push-1">
-    <h3 class="text-center">Manage Users</h3>
+    <h3 class="text-center">Book Management</h3>
     <div class="container">
         <div class="row">
             <div class="col-xs-8 col-xs-offset-2">
@@ -30,7 +30,6 @@
                                                                         All
                                                                         </option>
                                 </select>
-
                             }
                             <button style="margin-bottom:0" type="submit" value="Search" class="btn btn-default">Search</button>
                             <a asp-action="Index" asp-controller="Book" asp-area="StoreOwner">Back to Full List</a>
@@ -40,10 +39,11 @@
             </div><!-- end col-xs-8 -->
         </div><!-- end row -->
     </div><!-- end container -->
-    
+
     <div class="table-responsive" style="margin-top: 10vh">
+       
         <h4>Total Item: @Model.PaginationInfo.TotalItems</h4>
-                <h4>Current Page: @Model.PaginationInfo.ActualPage / @Model.PaginationInfo.TotalPages</h4>
+        <h4>Current Page: @Model.PaginationInfo.ActualPage / @Model.PaginationInfo.TotalPages</h4>
 
         <table class="table table-image text-center">
             <thead>
@@ -107,7 +107,13 @@
 
                     </a>
                 </th>
-                <th></th>
+                <th>
+                    <a
+                        asp-action="Create"
+                        asp-controller="Book"
+                        class="btn btn-success text-white"><i class="fas fa-random"></i> New Book</a>
+                                       
+                </th>
             </tr>
             </thead>
             <tbody>
@@ -142,6 +148,7 @@
         </table>
 
     </div>
+
 
 
 

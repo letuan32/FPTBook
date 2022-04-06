@@ -11,10 +11,11 @@ public interface IBookService
 {
     Task<PaginatedList<BookIndexItemVm>> GetBookIndexAsync(GetBookIndexRequest request);
 
-    Task<List<SelectListItem>> BookFilterOptionByCategoryAsync();
+    Task<List<SelectListItem>> GetCategoryTypesAsync();
     Task<int> AddSingleAsync(BookAddVm bookAddVm);
     Task<int> UpdateSingleAsync(BookUpdateVm bookUpdateVm);
     Task<int> DeleteSingleAsync(int id);
     Task<BookDetailVm> GetBookDetailAsync(int id);
     Task<int> GetBookTotalSales(int id);
+    
 }
