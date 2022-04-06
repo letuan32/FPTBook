@@ -1,3 +1,4 @@
+using Domain.Entities;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using WebMVC.Models.Books.Requests;
 using WebMVC.Models.Books.Responses;
@@ -17,5 +18,5 @@ public interface IBookService
     Task<int> DeleteSingleAsync(int id);
     Task<BookDetailVm> GetBookDetailAsync(int id);
     Task<int> GetBookTotalSales(int id);
-    
+    Task<Book?> GetBookByIdAsync(int id);
 }

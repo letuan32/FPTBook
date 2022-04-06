@@ -87,7 +87,11 @@ public class BookService : IBookService
 
     public async Task<int> UpdateSingleAsync(BookUpdateVm bookUpdateVm)
     {
-        throw new NotImplementedException();
+        var book = await GetBookByIdAsync(bookUpdateVm.Id);
+        book = _mapper.Map(bookUpdateVm, book);
+        _context.Entry(book).State = EntityState.Modified;
+        return await _context.SaveChangesAsync();
+        
     }
 
     public Task<int> DeleteSingleAsync(int id)
@@ -108,6 +112,9 @@ public class BookService : IBookService
             .CountAsync();
     }
 
+
+
+
     private static IQueryable<Book> FilterQuery(GetBookIndexRequest request, IQueryable<Book> queryable)
     {
         if (request.FilterOption.HasValue)
@@ -122,7 +129,7 @@ public class BookService : IBookService
         // Filter by search string
         if (!string.IsNullOrEmpty(request.SearchString))
             queryable = queryable.Where(book =>
-                book.Name.ToLower().Contains(request.SearchString));
+                book.Name.ToLower().Contains(request.SearchString.ToLower()));
 
         return queryable;
     }
@@ -161,8 +168,10 @@ public class BookService : IBookService
         return queryable;
     }
 
-    private async Task<Book?> GetBookByIdAsync(int id)
+    public async Task<Book?> GetBookByIdAsync(int id)
     {
         return await _context.Book.SingleOrDefaultAsync(x => x.Id == id);
     }
+    
+    
 }
