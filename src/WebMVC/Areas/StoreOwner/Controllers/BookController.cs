@@ -1,4 +1,8 @@
+using AutoMapper;
+using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.Operations;
+using WebMVC.Models.Books.Requests;
 using WebMVC.Models.Pagination;
 using WebMVC.Services.Base;
 using WebMVC.ViewModels.Books.Requests;
@@ -11,10 +15,12 @@ namespace WebMVC.Areas.StoreOwner.Controllers;
 public class BookController : Controller
 {
     private readonly IBookService _bookService;
+    private readonly IMapper _mapper;
 
-    public BookController(IBookService bookService)
+    public BookController(IBookService bookService, IMapper mapper)
     {
         _bookService = bookService;
+        _mapper = mapper;
     }
 
     [HttpGet]
@@ -82,6 +88,47 @@ public class BookController : Controller
                 $"It was not possible to create a new Book, please try later on ({ex.GetType().Name} - {ex.Message})");
         }
 
+        bookAddVm.Categories = await _bookService.GetCategoryTypesAsync();
         return View("Book/Create", bookAddVm);
+    }
+
+    public async Task<IActionResult> Edit(int? id)
+    {
+        if (id == null)
+        {
+            return NotFound();
+        }
+
+        var book = await _bookService.GetBookByIdAsync(id.Value);
+        if (book == null)
+        {
+            return NotFound();
+        }
+
+        var bookUpdateVm = _mapper.Map<Book, BookUpdateVm>(book);
+        bookUpdateVm.Categories = await _bookService.GetCategoryTypesAsync();
+
+        return View("Book/Edit", bookUpdateVm);
+    }
+    
+    [HttpPost]
+    public async Task<IActionResult> Edit([FromForm] BookUpdateVm bookUpdateVm)
+    {
+        try
+        {
+            if (ModelState.IsValid)
+            {
+                var isUpdated = await _bookService.UpdateSingleAsync(bookUpdateVm);
+                if (isUpdated == 1) return RedirectToAction("Index");
+                return View("Book/Edit", bookUpdateVm);
+            }
+        }
+        catch (Exception ex)
+        {
+            ModelState.AddModelError("Error",
+                $"It was not possible to update a new Book, please try later on ({ex.GetType().Name} - {ex.Message})");
+        }
+        bookUpdateVm.Categories = await _bookService.GetCategoryTypesAsync();
+        return View("Book/Edit", bookUpdateVm);
     }
 }

@@ -129,14 +129,16 @@
                     <td class="align-middle">@item.Price VND</td>
                     <td class="align-middle">@item.TotalSales</td>
                     <td class="align-middle">
-                        <div class="text-center">
-                            <a href="#" style="cursor:pointer">
-                                <i class=""></i>Button
+                        <div class="align-items-center" style="text-align: center">
+                            <a  class="btn btn-warning text-white text-center" style="cursor:pointer"
+                                asp-action="Edit"
+                                asp-route-id="@item.Id">
+                                <i class="material-icons">
+                                mode_edit
+                                </i>
                             </a>
-                            <a href="#" style="cursor:pointer">
-                                <i class=""></i>Button
-                            </a>
-                            <a href="#">
+                       
+                            <a href="#" >
                                 <i class=""></i>Button
                             </a>
                         </div>
