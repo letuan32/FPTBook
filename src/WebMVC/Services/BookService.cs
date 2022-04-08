@@ -1,11 +1,12 @@
+using AutoMapper;
 using Domain.Entities;
 using Infrastructure.Database;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using WebMVC.Models.Books.Requests;
-using WebMVC.Models.Books.Responses;
 using WebMVC.Models.Common;
 using WebMVC.Services.Base;
+using WebMVC.Utils;
 using WebMVC.ViewModels.Books.Requests;
 using WebMVC.ViewModels.Books.Responses;
 using WebMVC.ViewModels.Books.Utils;
@@ -15,11 +16,15 @@ namespace WebMVC.Services;
 public class BookService : IBookService
 {
     private readonly ApplicationDbContext _context;
+    private readonly IFileStorageService _fileStorageService;
+    private readonly IMapper _mapper;
 
 
-    public BookService(ApplicationDbContext context)
+    public BookService(ApplicationDbContext context, IMapper mapper, IFileStorageService fileStorageService)
     {
         _context = context;
+        _mapper = mapper;
+        _fileStorageService = fileStorageService;
     }
 
     public async Task<PaginatedList<BookIndexItemVm>> GetBookIndexAsync(GetBookIndexRequest request)
@@ -47,7 +52,7 @@ public class BookService : IBookService
             BookIndexOption.PageSize);
     }
 
-    public async Task<List<SelectListItem>> BookFilterOptionByCategoryAsync()
+    public async Task<List<SelectListItem>> GetCategoryTypesAsync()
     {
         return await _context.Category
             .Select(c => new SelectListItem
@@ -58,14 +63,27 @@ public class BookService : IBookService
             .AsNoTracking().ToListAsync();
     }
 
-    public Task<int> AddSingleAsync(BookAddVm bookAddVm)
+    public async Task<int> AddSingleAsync(BookAddVm bookAddVm)
     {
-        throw new NotImplementedException();
+        var book = _mapper.Map<BookAddVm, Book>(bookAddVm);
+        if (bookAddVm.ImageFile != null)
+        {
+            var bookImagePath =
+                await _fileStorageService.SaveFileAsync(bookAddVm.ImageFile, ResourcePath.BookImageDirectory);
+            book.ImageUrl = bookImagePath;
+        }
+
+        await _context.Book.AddAsync(book);
+        var result = await _context.SaveChangesAsync();
+        return result;
     }
 
-    public Task<int> UpdateSingleAsync(BookUpdateVm bookUpdateVm)
+    public async Task<int> UpdateSingleAsync(BookUpdateVm bookUpdateVm)
     {
-        throw new NotImplementedException();
+        var book = await GetBookByIdAsync(bookUpdateVm.Id);
+        book = _mapper.Map(bookUpdateVm, book);
+        _context.Entry(book).State = EntityState.Modified;
+        return await _context.SaveChangesAsync();
     }
 
     public Task<int> DeleteSingleAsync(int id)
@@ -73,9 +91,27 @@ public class BookService : IBookService
         throw new NotImplementedException();
     }
 
-    public Task<BookDetailVm> GetBookDetailAsync(int id)
+    public async Task<BookDetailVm> GetBookDetailAsync(int id)
     {
-        throw new NotImplementedException();
+        var book = _context.Book
+            .Include(x => x.Category)
+            .AsSplitQuery()
+            .AsNoTracking()
+            .Where(x => x.Id == id)
+            .Select(x => new BookDetailVm
+            {
+                Name = x.Name,
+                Description = x.Description,
+                CreatedDate = x.CreatedOn,
+                Category = x.Category.Name,
+                ImageUrl = x.ImageUrl,
+                Price = x.Price,
+                Quantity = x.Quantity,
+                TotalSales = x.OrderItem.Count
+            }).FirstOrDefault();
+        ;
+
+        return book;
     }
 
     public async Task<int> GetBookTotalSales(int id)
@@ -84,6 +120,24 @@ public class BookService : IBookService
             .Where(x => x.BookId == id)
             .AsNoTracking()
             .CountAsync();
+    }
+
+
+    public async Task<Book?> GetBookByIdAsync(int id)
+    {
+        return await _context.Book.SingleOrDefaultAsync(x => x.Id == id);
+    }
+
+    public async Task<int> DeleteAsync(int id)
+    {
+        var book = await GetBookByIdAsync(id);
+        if (book != null)
+        {
+            _context.Book.Remove(book);
+            return await _context.SaveChangesAsync();
+        }
+
+        return 0;
     }
 
     private static IQueryable<Book> FilterQuery(GetBookIndexRequest request, IQueryable<Book> queryable)
@@ -100,7 +154,7 @@ public class BookService : IBookService
         // Filter by search string
         if (!string.IsNullOrEmpty(request.SearchString))
             queryable = queryable.Where(book =>
-                book.Name.ToLower().Contains(request.SearchString));
+                book.Name.ToLower().Contains(request.SearchString.ToLower()));
 
         return queryable;
     }

@@ -5,7 +5,36 @@
 
 }
 <div class="container">
-    @{
-        await Html.RenderPartialAsync("Book/_BookIndexPartial", Model);
-    }
+    <div>
+        @{
+            await Html.RenderPartialAsync("Book/_BookIndexPartial", Model);
+        }
+    </div>
 </div>
+
+
+@section Scripts
+{
+    <script>
+            function DeleteBook(id) {
+             var url = '@Url.Action("Delete")'
+             var isConfirmed =confirm('Are you sure you wish to remove this Book?')
+             if (isConfirmed)
+             {
+                      $.ajax({
+                     type: "POST",
+                     url: url,
+                     data: { id: id},
+                     success: () => location.reload()
+                     })       
+             }
+             else{
+                 console.log("Else esle")
+                 }
+             }
+             
+           
+             
+            
+    </script>
+}
