@@ -1,12 +1,9 @@
 using AutoMapper;
 using Domain.Entities;
 using Infrastructure.Database;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.CodeAnalysis.Operations;
 using Microsoft.EntityFrameworkCore;
 using WebMVC.Models.Books.Requests;
-using WebMVC.Models.Books.Responses;
 using WebMVC.Models.Common;
 using WebMVC.Services.Base;
 using WebMVC.Utils;
@@ -21,10 +18,9 @@ public class BookService : IBookService
     private readonly ApplicationDbContext _context;
     private readonly IFileStorageService _fileStorageService;
     private readonly IMapper _mapper;
-    
 
 
-    public BookService(ApplicationDbContext context,IMapper mapper, IFileStorageService fileStorageService)
+    public BookService(ApplicationDbContext context, IMapper mapper, IFileStorageService fileStorageService)
     {
         _context = context;
         _mapper = mapper;
@@ -69,20 +65,17 @@ public class BookService : IBookService
 
     public async Task<int> AddSingleAsync(BookAddVm bookAddVm)
     {
-        
         var book = _mapper.Map<BookAddVm, Book>(bookAddVm);
-        if (bookAddVm.ImageFile!=null)
+        if (bookAddVm.ImageFile != null)
         {
             var bookImagePath =
                 await _fileStorageService.SaveFileAsync(bookAddVm.ImageFile, ResourcePath.BookImageDirectory);
             book.ImageUrl = bookImagePath;
         }
-       
+
         await _context.Book.AddAsync(book);
         var result = await _context.SaveChangesAsync();
         return result;
-
-
     }
 
     public async Task<int> UpdateSingleAsync(BookUpdateVm bookUpdateVm)
@@ -91,7 +84,6 @@ public class BookService : IBookService
         book = _mapper.Map(bookUpdateVm, book);
         _context.Entry(book).State = EntityState.Modified;
         return await _context.SaveChangesAsync();
-        
     }
 
     public Task<int> DeleteSingleAsync(int id)
@@ -99,9 +91,27 @@ public class BookService : IBookService
         throw new NotImplementedException();
     }
 
-    public Task<BookDetailVm> GetBookDetailAsync(int id)
+    public async Task<BookDetailVm> GetBookDetailAsync(int id)
     {
-        throw new NotImplementedException();
+        var book = _context.Book
+            .Include(x => x.Category)
+            .AsSplitQuery()
+            .AsNoTracking()
+            .Where(x => x.Id == id)
+            .Select(x => new BookDetailVm
+            {
+                Name = x.Name,
+                Description = x.Description,
+                CreatedDate = x.CreatedOn,
+                Category = x.Category.Name,
+                ImageUrl = x.ImageUrl,
+                Price = x.Price,
+                Quantity = x.Quantity,
+                TotalSales = x.OrderItem.Count
+            }).FirstOrDefault();
+        ;
+
+        return book;
     }
 
     public async Task<int> GetBookTotalSales(int id)
@@ -112,10 +122,6 @@ public class BookService : IBookService
             .CountAsync();
     }
 
-
-
-
-  
 
     public async Task<Book?> GetBookByIdAsync(int id)
     {
@@ -130,10 +136,10 @@ public class BookService : IBookService
             _context.Book.Remove(book);
             return await _context.SaveChangesAsync();
         }
+
         return 0;
-     
     }
-    
+
     private static IQueryable<Book> FilterQuery(GetBookIndexRequest request, IQueryable<Book> queryable)
     {
         if (request.FilterOption.HasValue)
