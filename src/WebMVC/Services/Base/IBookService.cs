@@ -1,7 +1,6 @@
 using Domain.Entities;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using WebMVC.Models.Books.Requests;
-using WebMVC.Models.Books.Responses;
 using WebMVC.Models.Common;
 using WebMVC.ViewModels.Books.Requests;
 using WebMVC.ViewModels.Books.Responses;
