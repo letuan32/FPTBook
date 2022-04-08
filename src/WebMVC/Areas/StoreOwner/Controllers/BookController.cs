@@ -131,4 +131,20 @@ public class BookController : Controller
         bookUpdateVm.Categories = await _bookService.GetCategoryTypesAsync();
         return View("Book/Edit", bookUpdateVm);
     }
+
+    [HttpPost]
+    public async Task<IActionResult> Delete(int id)
+    {
+        try
+        { 
+            var isDeleted = await _bookService.DeleteAsync(id);
+        }
+        catch (Exception e)
+        {
+            ModelState.AddModelError("Error",
+                $"({e.GetType().Name} - {e.Message})");
+        }
+        return RedirectToAction("Index");
+       
+    }
 }

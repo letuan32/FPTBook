@@ -115,6 +115,25 @@ public class BookService : IBookService
 
 
 
+  
+
+    public async Task<Book?> GetBookByIdAsync(int id)
+    {
+        return await _context.Book.SingleOrDefaultAsync(x => x.Id == id);
+    }
+
+    public async Task<int> DeleteAsync(int id)
+    {
+        var book = await GetBookByIdAsync(id);
+        if (book != null)
+        {
+            _context.Book.Remove(book);
+            return await _context.SaveChangesAsync();
+        }
+        return 0;
+     
+    }
+    
     private static IQueryable<Book> FilterQuery(GetBookIndexRequest request, IQueryable<Book> queryable)
     {
         if (request.FilterOption.HasValue)
@@ -167,11 +186,4 @@ public class BookService : IBookService
 
         return queryable;
     }
-
-    public async Task<Book?> GetBookByIdAsync(int id)
-    {
-        return await _context.Book.SingleOrDefaultAsync(x => x.Id == id);
-    }
-    
-    
 }

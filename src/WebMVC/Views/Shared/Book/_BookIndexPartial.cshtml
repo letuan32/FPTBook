@@ -133,13 +133,15 @@
                             <a  class="btn btn-warning text-white text-center" style="cursor:pointer"
                                 asp-action="Edit"
                                 asp-route-id="@item.Id">
-                                <i class="material-icons">
-                                mode_edit
+                                <i class="material-icons text-white">
+                                    mode_edit
                                 </i>
                             </a>
-                       
-                            <a href="#" >
-                                <i class=""></i>Button
+                            <a class=" btn btn-warning align-items-center" style="text-align: center"
+                               onclick="DeleteBook(@item.Id)">
+                                <i class="material-icons text-white">
+                                                                    delete
+                                                                </i>
                             </a>
                         </div>
                     </td>
