@@ -10,6 +10,8 @@ namespace Infrastructure.SeedData;
         {
             SeedCategories(builder);
             SeedBooks(builder);
+            SeedOrder(builder);
+            SeedOrderItems(builder);
         }
         private static void SeedCategories(ModelBuilder builder)
         { 
@@ -35,5 +37,31 @@ namespace Infrastructure.SeedData;
             builder.Entity<Book>()
                 .HasData(books);
            
+        }
+        
+        private static void SeedOrder(ModelBuilder builder)
+        {
+            var orders = new List<Order>();
+            using (StreamReader r = new StreamReader("./wwwroot/jsonData/orders.json"))
+            {
+                string json = r.ReadToEnd();
+             
+                orders = JsonConvert.DeserializeObject<List<Order>>(json);
+            }
+            builder.Entity<Order>()
+                .HasData(orders);
+        }
+
+        private static void SeedOrderItems(ModelBuilder builder)
+        {
+            var orderItems = new List<OrderItem>();
+            using (StreamReader r = new StreamReader("./wwwroot/jsonData/orderitems.json"))
+            {
+                string json = r.ReadToEnd();
+             
+                orderItems = JsonConvert.DeserializeObject<List<OrderItem>>(json);
+            }
+            builder.Entity<OrderItem>()
+                .HasData(orderItems);
         }
     }

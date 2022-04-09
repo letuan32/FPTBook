@@ -39,9 +39,8 @@ namespace Infrastructure.Database
             builder.ApplyConfiguration(new CategoryEntityConfiguration());
             builder.ApplyConfiguration(new OrderEntityConfiguration());
             builder.ApplyConfiguration(new OrderItemEntityConfiguration());
-            
-            SeedResourceData.Seeds(builder);
             SeedIdentity.Seeds(builder);
+            SeedResourceData.Seeds(builder);
         }
 
         
