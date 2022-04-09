@@ -75,22 +75,57 @@ public static  class SeedIdentity
         admin.SecurityStamp = Guid.NewGuid().ToString("D");
 
         // Customer
-        var customer = new User();
-        customer.UserName = "customer@gmail.com";
-        customer.NormalizedUserName = "customer@gmail.com".ToUpper();
-        customer.Address = "Le Duan, Da Nang";
-        customer.Email = "customer@gmail.com";
-        customer.NormalizedUserName = "customer@gmail.com".ToUpper();
-        customer.Id = 100;
-        customer.PasswordHash = hasher.HashPassword(null, "Default@123");
-        customer.SecurityStamp = Guid.NewGuid().ToString("D");
+        var customer100 = new User();
+        customer100.UserName = "customer100@gmail.com";
+        customer100.NormalizedUserName = "customer100@gmail.com".ToUpper();
+        customer100.Address = "Le Duan, Da Nang";
+        customer100.Email = "customer100@gmail.com";
+        customer100.NormalizedUserName = "customer100@gmail.com".ToUpper();
+        customer100.Id = 100;
+        customer100.PasswordHash = hasher.HashPassword(null, "Default@123");
+        customer100.SecurityStamp = Guid.NewGuid().ToString("D");
+        
+        
+        var customer101 = new User();
+        customer101.UserName = "customer101@gmail.com";
+        customer101.NormalizedUserName = "customer101@gmail.com".ToUpper();
+        customer101.Address = "Le Duan, Da Nang";
+        customer101.Email = "customer101@gmail.com";
+        customer101.NormalizedUserName = "customer101@gmail.com".ToUpper();
+        customer101.Id = 101;
+        customer101.PasswordHash = hasher.HashPassword(null, "Default@123");
+        customer101.SecurityStamp = Guid.NewGuid().ToString("D");
+
+        var customer102 = new User();
+        customer102.UserName = "customer102@gmail.com";
+        customer102.NormalizedUserName = "customer102@gmail.com".ToUpper();
+        customer102.Address = "Le Duan, Da Nang";
+        customer102.Email = "customer102@gmail.com";
+        customer102.NormalizedUserName = "customer102@gmail.com".ToUpper();
+        customer102.Id = 102;
+        customer102.PasswordHash = hasher.HashPassword(null, "Default@123");
+        customer102.SecurityStamp = Guid.NewGuid().ToString("D");
+
+        
+        var customer103 = new User();
+        customer103.UserName = "customer103@gmail.com";
+        customer103.NormalizedUserName = "customer103@gmail.com".ToUpper();
+        customer103.Address = "Le Duan, Da Nang";
+        customer103.Email = "customer103@gmail.com";
+        customer103.NormalizedUserName = "customer103@gmail.com".ToUpper();
+        customer103.Id = 103;
+        customer103.PasswordHash = hasher.HashPassword(null, "Default@123");
+        customer103.SecurityStamp = Guid.NewGuid().ToString("D");
 
         
         builder.Entity<User>().HasData(
             admin,
             storeOwner201,
             storeOwner202,
-            customer
+            customer103,
+            customer101,
+            customer102,
+            customer100
         );
     }
 
@@ -117,9 +152,27 @@ public static  class SeedIdentity
             },
             new IdentityUserRole<int>
             {
-                // Store Owner 202
+                // Customer 100
                 RoleId = 102,
                 UserId = 100,
+            },
+        new IdentityUserRole<int>
+            {
+                // Customer 101
+                RoleId = 102,
+                UserId = 101,
+            },
+        new IdentityUserRole<int>
+            {
+                // Customer 102
+                RoleId = 102,
+                UserId = 102,
+            },
+        new IdentityUserRole<int>
+            {
+                // Customer 103
+                RoleId = 102,
+                UserId = 103,
             }
             
             
