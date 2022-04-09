@@ -25,6 +25,7 @@ public class BookController : Controller
     [HttpGet]
     public async Task<IActionResult> Index([FromQuery] GetBookIndexRequest request)
     {
+        request.PageSize = BookIndexOption.PageSize;
         var books = await _bookService.GetBookIndexAsync(request);
         var vm = new BookIndexVm
         {

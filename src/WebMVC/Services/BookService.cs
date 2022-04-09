@@ -36,7 +36,7 @@ public class BookService : IBookService
         queryable = SortingQuery(request, queryable);
         var totalCount = queryable.Count();
         queryable = PaginatedList<Book>.CreatePangingQueryAsync(queryable, request.PageNumber ?? 1,
-            BookIndexOption.PageSize);
+            request.PageSize?? 5);
 
         var bookIndexVms = await queryable.Select(x => new BookIndexItemVm
         {
@@ -49,7 +49,7 @@ public class BookService : IBookService
         }).ToListAsync();
 
         return await PaginatedList<BookIndexItemVm>.GetPagingResult(bookIndexVms, totalCount, request.PageNumber ?? 1,
-            BookIndexOption.PageSize);
+            request.PageSize??5);
     }
 
     public async Task<List<SelectListItem>> GetCategoryTypesAsync()
