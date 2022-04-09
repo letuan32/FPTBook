@@ -1,7 +1,6 @@
 using AutoMapper;
 using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.CodeAnalysis.Operations;
 using WebMVC.Models.Books.Requests;
 using WebMVC.Models.Pagination;
 using WebMVC.Services.Base;
@@ -110,7 +109,7 @@ public class BookController : Controller
 
         return View("Book/Edit", bookUpdateVm);
     }
-    
+
     [HttpPost]
     public async Task<IActionResult> Edit([FromForm] BookUpdateVm bookUpdateVm)
     {

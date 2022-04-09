@@ -1,4 +1,3 @@
-using Domain.Entities;
 using Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;
 using WebMVC.Services;
@@ -22,10 +21,11 @@ public static class ServiceExtensions
     public static void AddServices(WebApplicationBuilder builder)
     {
         builder.Services
-            .AddScoped<IServiceBase, CategoryService>();
-        builder.Services.AddScoped<IBookService, BookService>();
+            .AddScoped<ICategoryService, CategoryService>()
+            .AddScoped<IBookService, BookService>()
+            .AddScoped<IFileStorageService, FileStorageService>();
+
         // Automapper
         builder.Services.AddAutoMapper(typeof(Program).Assembly);
-        builder.Services.AddScoped<IFileStorageService, FileStorageService>();
     }
 }

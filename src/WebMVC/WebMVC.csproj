@@ -37,7 +37,6 @@
     <ItemGroup>
         <Folder Include="ViewModels\Books\Requests\" />
         <Folder Include="ViewModels\Books\Responses\" />
-        <Folder Include="ViewModels\Categories\Responses\" />
         <Folder Include="ViewModels\Categories\Requests\" />
         <Folder Include="wwwroot\BookImage" />
     </ItemGroup>
