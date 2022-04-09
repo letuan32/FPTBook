@@ -35,6 +35,7 @@
     </ItemGroup>
 
     <ItemGroup>
+        <Folder Include="Areas\Customer\Models" />
         <Folder Include="ViewModels\Books\Requests\" />
         <Folder Include="ViewModels\Books\Responses\" />
         <Folder Include="ViewModels\Categories\Responses\" />
@@ -380,6 +381,8 @@
       <_ContentIncludedByDefault Remove="wwwroot\assets\scss\material-dashboard\_utilities-extend.scss" />
       <_ContentIncludedByDefault Remove="wwwroot\assets\scss\material-dashboard\_utilities.scss" />
       <_ContentIncludedByDefault Remove="wwwroot\assets\scss\material-dashboard\_variables.scss" />
+      <_ContentIncludedByDefault Remove="Views\Home\Index.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Home\Privacy.cshtml" />
     </ItemGroup>
 
 
