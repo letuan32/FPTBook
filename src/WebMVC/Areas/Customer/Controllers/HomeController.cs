@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using WebMVC.Areas.Constant;
+using WebMVC.Areas.Customer.Constant;
 using WebMVC.Models.Pagination;
 using WebMVC.Services.Base;
 using WebMVC.ViewModels.Books.Requests;

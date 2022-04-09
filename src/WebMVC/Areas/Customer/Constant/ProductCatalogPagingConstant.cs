@@ -1,4 +1,4 @@
-namespace WebMVC.Areas.Constant;
+namespace WebMVC.Areas.Customer.Constant;
 
 public static class ProductCatalogPagingConstant
 {
