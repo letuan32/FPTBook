@@ -52,8 +52,13 @@
                     <p class="card-text">Quantity: @item.Quantity VND</p>
                 </div>
                 <div class="text-center" style="margin-bottom: 5px">
+                    <a class="btn btn-secondary"
+                       asp-action="ProductDetail"
+                       asp-route-id="@item.Id",
+                       asp-route-productName="@item.Name"
+                       >More Details</a>
                     <a class="btn btn-secondary">Add to cart</a>
- <a class="btn btn-secondary">Buy now</a>
+                    <a class="btn btn-secondary">Buy now</a>
 
                 </div>
             </div>

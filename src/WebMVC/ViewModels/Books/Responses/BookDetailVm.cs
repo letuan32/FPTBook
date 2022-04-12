@@ -9,6 +9,7 @@ public class BookDetailVm
     [ReadOnly(true)] public string Description { get; set; } = null!;
 
     [ReadOnly(true)] public string Category { get; set; } = null!;
+    [ReadOnly(true)] public int CategoryId { get; set; }
 
     [ReadOnly(true)] public int Price { get; set; }
 

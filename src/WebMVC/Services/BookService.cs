@@ -1,3 +1,4 @@
+
 using AutoMapper;
 using Domain.Entities;
 using Infrastructure.Database;
@@ -107,7 +108,8 @@ public class BookService : IBookService
                 ImageUrl = x.ImageUrl,
                 Price = x.Price,
                 Quantity = x.Quantity,
-                TotalSales = x.OrderItem.Count
+                TotalSales = x.OrderItem.Count,
+                CategoryId = x.CategoryId
             }).FirstOrDefault();
         ;
 
@@ -138,6 +140,30 @@ public class BookService : IBookService
         }
 
         return 0;
+    }
+
+    public async Task<IEnumerable<BookIndexItemVm>> GetRelatedBooksByCategoryAsync(int categoryId)
+    {
+        // TODO: Get random related records
+        var total = await _context.Book.CountAsync();
+        var rand = new Random();
+        var toSkip = rand.Next(1, total-5 );
+        var relatedBooks = await _context.Book
+            .Skip(toSkip)
+            .Take(5)
+            .Select(x => new BookIndexItemVm()
+            {
+                Id = x.Id,
+                Name = x.Name, ImageUrl = x.ImageUrl,
+                Price = x.Price,
+                Quantity = x.Quantity,
+                TotalSales = x.OrderItem.Count,
+                CategoryId = x.CategoryId
+            })
+            .AsNoTracking()
+            .ToListAsync();
+
+        return relatedBooks;
     }
 
     private static IQueryable<Book> FilterQuery(GetBookIndexRequest request, IQueryable<Book> queryable)
