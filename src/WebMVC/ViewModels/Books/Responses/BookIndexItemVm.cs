@@ -8,5 +8,6 @@ public class BookIndexItemVm
     public int Quantity { get; set; }
     public string ImageUrl { get; set; }
     public int TotalSales { get; set; }
+    public int? CategoryId { get; set; }
    
 }

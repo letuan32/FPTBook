@@ -1,8 +1,10 @@
 
 using System.Reflection;
+using System.Security.Policy;
 using Domain.Entities;
 using Infrastructure.Database;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using WebMVC.Extensions;
 
@@ -71,16 +73,19 @@ app.UseEndpoints(endpoints =>
         name: "StoreOwner",
         areaName: "StoreOwner",
         pattern: "StoreOwner/{controller=Home}/{action=Index}/{id?}");
-    // endpoints.MapControllerRoute(
-    //     name: "default",
-    //     pattern: "{controller=Home}/{action=Index}/{id?}");
+
     endpoints.MapAreaControllerRoute(
         name: "Customer",
         areaName: "Customer",
         pattern: "{controller=Home}/{action=Index}/{id?}");
-  
-
+    // endpoints.MapControllerRoute(
+    //     name: "default",
+    //     pattern: "{controller=Home}/{action=Index}/{id?}");
+    endpoints.MapControllers();    
     endpoints.MapRazorPages();
+
+    
 });
+
 app.MapRazorPages();
 app.Run();
