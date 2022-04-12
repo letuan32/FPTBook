@@ -1,0 +1,29 @@
+@model IEnumerable<WebMVC.ViewModels.Books.Responses.BookIndexItemVm>
+
+<h3>More books:</h3>
+<div class="row row-cols-1 row-cols-md-5 g-4" style="margin-top: 10px">
+    @foreach (var item in Model)
+    {
+        <div class="col">
+            <div class="card h-100">
+                <img src="@item.ImageUrl" class="card-img-top" alt="...">
+                
+                <div class="card-body">
+                    <h5 class="card-title">@item.Name</h5>
+                    <p class="card-text">Price: @item.Price VND</p>
+                    <p class="card-text">Total Sales: @item.TotalSales</p>
+                    <p class="card-text">Quantity: @item.Quantity</p>
+                </div>
+                <div class="text-center" style="margin-bottom: 10px">
+                    <a class="btn btn-secondary"
+                       asp-action="ProductDetail"
+                       asp-route-id="@item.Id",
+                       asp-route-productName="@item.Name"
+                    >More Details</a>
+
+                </div>
+            </div>
+        </div>
+    }
+
+</div>

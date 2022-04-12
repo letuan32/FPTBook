@@ -19,4 +19,6 @@ public interface IBookService
     Task<int> GetBookTotalSales(int id);
     Task<Book?> GetBookByIdAsync(int id);
     Task<int> DeleteAsync(int id);
+
+    Task<IEnumerable<BookIndexItemVm>> GetRelatedBooksByCategoryAsync(int categoryId);
 }

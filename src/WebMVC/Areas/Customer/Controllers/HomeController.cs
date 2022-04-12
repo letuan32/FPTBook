@@ -1,3 +1,4 @@
+using System.Security.Cryptography;
 using Microsoft.AspNetCore.Mvc;
 using WebMVC.Areas.Customer.Constant;
 using WebMVC.Models.Pagination;
@@ -20,7 +21,6 @@ public class HomeController: Controller
 
     public async Task<IActionResult> Index(GetBookIndexRequest request)
     {
-
         request.PageSize = ProductCatalogPagingConstant.PageSize;
         var books = await _bookService.GetBookIndexAsync(request);
         var vm = new BookIndexVm
@@ -51,5 +51,26 @@ public class HomeController: Controller
             }
         };
         return View(vm);
+    }
+
+    [ActionName("ProductDetail")]
+    [Route("/{productName}")]
+
+    public async Task<IActionResult> ProductDetail(string? productName, int? id)
+    {
+        try
+        {
+            if (id == null) return RedirectToAction("Index");
+            var bookDetailVm = await _bookService.GetBookDetailAsync(id.Value);
+            ViewBag.PreUrl = Request.GetTypedHeaders().Referer?.ToString() ?? string.Empty;
+
+            return View("ProductDetail", bookDetailVm);
+        }
+        catch (Exception ex)
+        {
+            ModelState.AddModelError("Error",
+                $"({ex.GetType().Name} - {ex.Message})");
+        }
+        return View("Index");
     }
 }
