@@ -35,6 +35,7 @@
     </ItemGroup>
 
     <ItemGroup>
+        <Folder Include="Areas\Customer\Models" />
         <Folder Include="ViewModels\Books\Requests\" />
         <Folder Include="ViewModels\Books\Responses\" />
         <Folder Include="ViewModels\Categories\Requests\" />
@@ -51,6 +52,9 @@
         <Content Remove="wwwroot\BookImage\69be9420-be28-4732-a3d8-efa3b631e16f.png" />
         <Content Remove="wwwroot\BookImage\5a8038c3-ef62-4f2f-aaff-b4206bea91b3.png" />
         <Content Remove="wwwroot\BookImage\2a57e26e-64c5-4a5c-bbc7-2d41b47a313e.png" />
+        <Content Remove="wwwroot\BookImage\f1f12822-91ba-422f-ab0b-5ded894117bf.png" />
+        <Content Remove="wwwroot\BookImage\bf694b16-c7ce-4de1-96c3-a4cc0ab1e7a9.png" />
+        <Content Remove="wwwroot\BookImage\3e969f38-2f5d-4d1e-a22f-5c81e5115258.png" />
     </ItemGroup>
 
     <ItemGroup>
@@ -376,6 +380,8 @@
       <_ContentIncludedByDefault Remove="wwwroot\assets\scss\material-dashboard\_utilities-extend.scss" />
       <_ContentIncludedByDefault Remove="wwwroot\assets\scss\material-dashboard\_utilities.scss" />
       <_ContentIncludedByDefault Remove="wwwroot\assets\scss\material-dashboard\_variables.scss" />
+      <_ContentIncludedByDefault Remove="Views\Home\Index.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Home\Privacy.cshtml" />
     </ItemGroup>
 
 

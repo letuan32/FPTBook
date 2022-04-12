@@ -5,201 +5,212 @@
 
 
 <div class="col-md-12 col-md-push-1">
-    <h3 class="text-center">Book Management</h3>
-    <div class="container">
-        <div class="row">
-            <div class="col-xs-8 col-xs-offset-2">
-                <form asp-action="Index" method="get">
-                    <div class="col-12 d-flex justify-content-center text-center">
-                        <div class="">
-
-                            Find by name: <input type="text" name="SearchString" value="@Model.CurrentSearchString"/>|
-                            Filter:
-                            @if (Model.CurrentCategoryFilter == null)
-                            {
-                                <select asp-for="@Model.CurrentCategoryFilter" name="FilterOption" asp-items="@Model.Categories" class="esh-catalog-filter">
-                                    <option value="" selected="selected">
-                                    All
-                                    </option>
-                                </select>
-                            }
-                            else
-                            {
-                                <select asp-for="@Model.CurrentCategoryFilter" name="FilterOption" asp-items="@Model.Categories" class="esh-catalog-filter">
-                                    <option value="">
-                                                                        All
-                                                                        </option>
-                                </select>
-                            }
-                            <button style="margin-bottom:0" type="submit" value="Search" class="btn btn-default">Search</button>
-                            <a asp-action="Index" asp-controller="Book" asp-area="StoreOwner">Back to Full List</a>
-                        </div>
-                    </div>
-                </form>
-            </div><!-- end col-xs-8 -->
-        </div><!-- end row -->
-    </div><!-- end container -->
-
-    <div class="table-responsive" style="margin-top: 10vh">
-       
-        <h4>Total Item: @Model.PaginationInfo.TotalItems</h4>
-        <h4>Current Page: @Model.PaginationInfo.ActualPage / @Model.PaginationInfo.TotalPages</h4>
-
-        <table class="table table-image text-center">
-            <thead>
-            <tr>
-                <th class="align-middle" scope="col">
-                    Image
-                </th>
-                <th class="align-middle" scope="col">
-                    <a asp-action="Index"
-                       asp-route-sortOption="@Model.NameSortParm"
-                       asp-route-FilterOption="@Model.CurrentCategoryFilter"
-                       asp-route-currentSearch="@Model.CurrentSearchString">
-                        <div class="text-center me-2 d-flex align-items-center justify-content-center">
-                            <span class="nav-link-text ms-1">Title </span>
-                            <i class="material-icons" style="padding-left: 5px">
-                                sort
-                            </i>
-                        </div>
-
-                    </a>
-                </th>
-                <th class="align-middle" scope="col">
-                    <a asp-action="Index"
-                       asp-route-sortOption="@Model.QuantitySortParm"
-                       asp-route-FilterOption="@Model.CurrentCategoryFilter"
-                       asp-route-currentSearch="@Model.CurrentSearchString">
-                        <div class="text-center me-2 d-flex align-items-center justify-content-center">
-                            <span class="nav-link-text ms-1">Quantity </span>
-                            <i class="material-icons" style="padding-left: 5px">
-                                sort
-                            </i>
-                        </div>
-
-                    </a>
-                </th>
-                <th class="align-middle" scope="col">
-                    <a asp-action="Index"
-                       asp-route-sortOption="@Model.PriceSortParm"
-                       asp-route-FilterOption="@Model.CurrentCategoryFilter"
-                       asp-route-currentSearch="@Model.CurrentSearchString">
-                        <div class="text-center me-2 d-flex align-items-center justify-content-center">
-                            <span class="nav-link-text ms-1">Price </span>
-                            <i class="material-icons" style="padding-left: 5px">
-                                sort
-                            </i>
-                        </div>
-
-                    </a>
-                </th>
-                <th class="align-middle" scope="col">
-                    <a asp-action="Index"
-                       asp-route-sortOption="@Model.TotalSalesSortParm"
-                       asp-route-FilterOption="@Model.CurrentCategoryFilter"
-                       asp-route-currentSearch="@Model.CurrentSearchString">
-                        <div class="text-center me-2 d-flex align-items-center justify-content-center">
-                            <span class="nav-link-text ms-1">Total Sales </span>
-                            <i class="material-icons" style="padding-left: 5px">
-                                sort
-                            </i>
-                        </div>
-
-                    </a>
-                </th>
-                <th>
-                    <a
-                        asp-action="Create"
-                        asp-controller="Book"
-                        class="btn btn-success text-white"><i class="fas fa-random"></i> New Book</a>
-                                       
-                </th>
-            </tr>
-            </thead>
-            <tbody>
-            @foreach (var item in Model.BookItems)
-            {
-                <tr>
-
-                    <td class="align-middle">
-                        <img width="100" src="@item.ImageUrl" alt="Image"/>
-                    </td>
-                    <td class="align-middle">@item.Name</td>
-                    <td class="align-middle">@item.Quantity</td>
-                    <td class="align-middle">@item.Price VND</td>
-                    <td class="align-middle">@item.TotalSales</td>
-                    <td class="align-middle">
-                        <div class="align-items-center" style="text-align: center">
-                            <a  class="btn btn-warning text-white text-center" style="cursor:pointer"
-                                asp-action="Edit"
-                                asp-route-id="@item.Id">
-                                <i class="material-icons">
-                                mode_edit
-                                </i>
-                            </a>
-                       
-                            <a href="#" >
-                                <i class=""></i>Button
-                            </a>
-                        </div>
-                    </td>
-                </tr>
-            }
-
-            </tbody>
-        </table>
-
-    </div>
-
-
-
-
+<h3 class="text-center">Book Management</h3>
+<div class="container">
     <div class="row">
         <div class="col-xs-8 col-xs-offset-2">
-
-            @{
-                var prevDisabled = !Model.PaginationInfo.Previous ? "disabled" : "";
-                var nextDisabled = !Model.PaginationInfo.Next ? "disabled" : "";
-            }
-            <nav >
-                <ul class="pagination justify-content-center">
-                    <li class="page-item">
-                        <a class="page-link btn @prevDisabled"
-                           asp-area="StoreOwner"
-                           asp-controller="Book"
-                           asp-action="Index"
-                           asp-route-pageNumber="@(Model.PaginationInfo.ActualPage - 1)"
-                           asp-route-sortOption="@Model.CurrentSort"
-                           asp-route-CurrentSearch="@Model.CurrentSearchString"
-                           asp-route-FilterOption="@Model.CurrentCategoryFilter">
-                            <span aria-hidden="true">&laquo;</span>
-                        </a>
-                    </li>
-                    <li class="page-item">
-                        <a class="page-link  @nextDisabled"
-                           asp-area="StoreOwner"
-                           asp-controller="Book"
-                           asp-action="Index"
-                           asp-route-pageNumber="@(Model.PaginationInfo.ActualPage + 1)"
-                           asp-route-sortOption="@Model.CurrentSort"
-                           asp-route-CurrentSearch="@Model.CurrentSearchString"
-                           asp-route-FilterOption="@Model.CurrentCategoryFilter">
-                            <span aria-hidden="true">&raquo;</span>
-                        </a>
-                    </li></ul>
-            </nav>
             <form asp-action="Index" method="get">
-<div class="col-12 d-flex justify-content-center text-center">
-                        <div class="">
+                <div class="col-12 d-flex justify-content-center text-center">
+                    <div class="">
 
-                            Go to page: <input type="text" name="pageNumber" value=""/>|
-                            @Model.PaginationInfo.TotalPages
-                            <input type="hidden" asp-for="@Model.CurrentSearchString"  name="searchString"/>
-                            <input type="hidden" asp-for="@Model.CurrentSort" name="SortOrder"/>
-                            <input type="hidden" asp-for="@Model.CurrentCategoryFilter" name="filterOption"/>
-                            <button style="margin-bottom:0" type="submit" value="Search" class="btn btn-default">Submit</button>
-                        </div>
+                        Find by name: <input type="text" name="SearchString" value="@Model.CurrentSearchString"/>|
+                        Filter:
+                        @if (Model.CurrentCategoryFilter == null)
+                        {
+                            <select asp-for="@Model.CurrentCategoryFilter" name="FilterOption" asp-items="@Model.Categories" class="esh-catalog-filter">
+                                <option value="" selected="selected">
+                                    All
+                                </option>
+                            </select>
+                        }
+                        else
+                        {
+                            <select asp-for="@Model.CurrentCategoryFilter" name="FilterOption" asp-items="@Model.Categories" class="esh-catalog-filter">
+                                <option value="">
+                                    All
+                                </option>
+                            </select>
+                        }
+                        <button style="margin-bottom:0" type="submit" value="Search" class="btn btn-default">Search</button>
+                        <a asp-action="Index" asp-controller="Book" asp-area="StoreOwner">Back to Full List</a>
                     </div>
+                </div>
             </form>
-        </div><!-- end col-xs-8 --></div>
+        </div><!-- end col-xs-8 -->
+    </div><!-- end row -->
+</div><!-- end container -->
+
+<div class="table-responsive" style="margin-top: 10vh">
+
+    <h4>Total Item: @Model.PaginationInfo.TotalItems</h4>
+    <h4>Current Page: @Model.PaginationInfo.ActualPage / @Model.PaginationInfo.TotalPages</h4>
+
+    <table class="table table-image text-center">
+        <thead>
+        <tr>
+            <th class="align-middle" scope="col">
+                Image
+            </th>
+            <th class="align-middle" scope="col">
+                <a asp-action="Index"
+                   asp-route-sortOption="@Model.NameSortParm"
+                   asp-route-FilterOption="@Model.CurrentCategoryFilter"
+                   asp-route-currentSearch="@Model.CurrentSearchString">
+                    <div class="text-center me-2 d-flex align-items-center justify-content-center">
+                        <span class="nav-link-text ms-1">Title </span>
+                        <i class="material-icons" style="padding-left: 5px">
+                            sort
+                        </i>
+                    </div>
+
+                </a>
+            </th>
+            <th class="align-middle" scope="col">
+                <a asp-action="Index"
+                   asp-route-sortOption="@Model.QuantitySortParm"
+                   asp-route-FilterOption="@Model.CurrentCategoryFilter"
+                   asp-route-currentSearch="@Model.CurrentSearchString">
+                    <div class="text-center me-2 d-flex align-items-center justify-content-center">
+                        <span class="nav-link-text ms-1">Quantity </span>
+                        <i class="material-icons" style="padding-left: 5px">
+                            sort
+                        </i>
+                    </div>
+
+                </a>
+            </th>
+            <th class="align-middle" scope="col">
+                <a asp-action="Index"
+                   asp-route-sortOption="@Model.PriceSortParm"
+                   asp-route-FilterOption="@Model.CurrentCategoryFilter"
+                   asp-route-currentSearch="@Model.CurrentSearchString">
+                    <div class="text-center me-2 d-flex align-items-center justify-content-center">
+                        <span class="nav-link-text ms-1">Price </span>
+                        <i class="material-icons" style="padding-left: 5px">
+                            sort
+                        </i>
+                    </div>
+
+                </a>
+            </th>
+            <th class="align-middle" scope="col">
+                <a asp-action="Index"
+                   asp-route-sortOption="@Model.TotalSalesSortParm"
+                   asp-route-FilterOption="@Model.CurrentCategoryFilter"
+                   asp-route-currentSearch="@Model.CurrentSearchString">
+                    <div class="text-center me-2 d-flex align-items-center justify-content-center">
+                        <span class="nav-link-text ms-1">Total Sales </span>
+                        <i class="material-icons" style="padding-left: 5px">
+                            sort
+                        </i>
+                    </div>
+
+                </a>
+            </th>
+            <th>
+                <a
+                    asp-action="Create"
+                    asp-controller="Book"
+                    class="btn btn-success text-white">
+                    <i class="fas fa-random"></i> New Book
+                </a>
+
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var item in Model.BookItems)
+        {
+            <tr>
+
+                <td class="align-middle">
+                    <img width="100" src="@item.ImageUrl" alt="Image"/>
+                </td>
+                <td class="align-middle">@item.Name</td>
+                <td class="align-middle">@item.Quantity</td>
+                <td class="align-middle">@item.Price VND</td>
+                <td class="align-middle">@item.TotalSales</td>
+                <td class="align-middle">
+                    <div class="align-items-center" style="text-align: center">
+                        <a class="btn btn-warning text-white text-center" style="cursor:pointer"
+                           asp-action="Detail"
+                           asp-route-id="@item.Id">
+                            <i class="material-icons text-white">
+                                description
+                            </i>
+                        </a>
+                        <a class="btn btn-warning text-white text-center" style="cursor:pointer"
+                           asp-action="Edit"
+                           asp-route-id="@item.Id">
+                            <i class="material-icons text-white">
+                                mode_edit
+                            </i>
+                        </a>
+                        <a class=" btn btn-warning align-items-center" style="text-align: center"
+                           onclick="DeleteBook(@item.Id)">
+                            <i class="material-icons text-white">
+                                delete
+                            </i>
+                        </a>
+                    </div>
+                </td>
+            </tr>
+        }
+
+        </tbody>
+    </table>
+
+</div>
+
+
+<div class="row">
+    <div class="col-xs-8 col-xs-offset-2">
+
+        @{
+            var prevDisabled = !Model.PaginationInfo.Previous ? "disabled" : "";
+            var nextDisabled = !Model.PaginationInfo.Next ? "disabled" : "";
+        }
+        <nav >
+            <ul class="pagination justify-content-center">
+                <li class="page-item">
+                    <a class="page-link btn @prevDisabled"
+                       asp-area="StoreOwner"
+                       asp-controller="Book"
+                       asp-action="Index"
+                       asp-route-pageNumber="@(Model.PaginationInfo.ActualPage - 1)"
+                       asp-route-sortOption="@Model.CurrentSort"
+                       asp-route-CurrentSearch="@Model.CurrentSearchString"
+                       asp-route-FilterOption="@Model.CurrentCategoryFilter">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link  @nextDisabled"
+                       asp-area="StoreOwner"
+                       asp-controller="Book"
+                       asp-action="Index"
+                       asp-route-pageNumber="@(Model.PaginationInfo.ActualPage + 1)"
+                       asp-route-sortOption="@Model.CurrentSort"
+                       asp-route-CurrentSearch="@Model.CurrentSearchString"
+                       asp-route-FilterOption="@Model.CurrentCategoryFilter">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        <form asp-action="Index" method="get">
+            <div class="col-12 d-flex justify-content-center text-center">
+                <div class="">
+
+                    Go to page: <input type="text" name="pageNumber" value=""/>|
+                    @Model.PaginationInfo.TotalPages
+                    <input type="hidden" asp-for="@Model.CurrentSearchString" name="searchString"/>
+                    <input type="hidden" asp-for="@Model.CurrentSort" name="SortOrder"/>
+                    <input type="hidden" asp-for="@Model.CurrentCategoryFilter" name="filterOption"/>
+                    <button style="margin-bottom:0" type="submit" value="Search" class="btn btn-default">Submit</button>
+                </div>
+            </div>
+        </form>
+    </div><!-- end col-xs-8 -->
+</div>
 </div><!-- end col-md-9 -->

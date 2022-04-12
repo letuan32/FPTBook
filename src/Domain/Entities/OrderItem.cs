@@ -4,7 +4,7 @@ using Domain.Base;
 
 namespace Domain.Entities
 {
-    public partial class OrderItem : BaseEntity<int>
+    public class OrderItem : BaseEntity<int>
     {
         public int OrderId { get; set; }
         public int BookId { get; set; }

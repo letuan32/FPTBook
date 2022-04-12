@@ -25,6 +25,7 @@ public class BookController : Controller
     [HttpGet]
     public async Task<IActionResult> Index([FromQuery] GetBookIndexRequest request)
     {
+        request.PageSize = BookIndexOption.PageSize;
         var books = await _bookService.GetBookIndexAsync(request);
         var vm = new BookIndexVm
         {
@@ -67,6 +68,25 @@ public class BookController : Controller
         return View("Book/Create", bookAddVm);
     }
 
+    public async Task<IActionResult> Detail(int? id)
+    {
+        try
+        {
+            if (id == null) return RedirectToAction("Index");
+            var bookDetailVm = await _bookService.GetBookDetailAsync(id.Value);
+            ViewBag.PreUrl = Request.GetTypedHeaders().Referer?.ToString() ?? string.Empty;
+
+            return View("Book/Details", bookDetailVm);
+        }
+        catch (Exception ex)
+        {
+            ModelState.AddModelError("Error",
+                $"({ex.GetType().Name} - {ex.Message})");
+        }
+
+        return View("Index");
+    }
+
     [HttpPost]
     [RequestSizeLimit(200000)]
     public async Task<IActionResult> Create([FromForm] BookAddVm bookAddVm)
@@ -93,16 +113,10 @@ public class BookController : Controller
 
     public async Task<IActionResult> Edit(int? id)
     {
-        if (id == null)
-        {
-            return NotFound();
-        }
+        if (id == null) return NotFound();
 
         var book = await _bookService.GetBookByIdAsync(id.Value);
-        if (book == null)
-        {
-            return NotFound();
-        }
+        if (book == null) return NotFound();
 
         var bookUpdateVm = _mapper.Map<Book, BookUpdateVm>(book);
         bookUpdateVm.Categories = await _bookService.GetCategoryTypesAsync();
@@ -127,7 +141,24 @@ public class BookController : Controller
             ModelState.AddModelError("Error",
                 $"It was not possible to update a new Book, please try later on ({ex.GetType().Name} - {ex.Message})");
         }
+
         bookUpdateVm.Categories = await _bookService.GetCategoryTypesAsync();
         return View("Book/Edit", bookUpdateVm);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Delete(int id)
+    {
+        try
+        {
+            var isDeleted = await _bookService.DeleteAsync(id);
+        }
+        catch (Exception e)
+        {
+            ModelState.AddModelError("Error",
+                $"({e.GetType().Name} - {e.Message})");
+        }
+
+        return RedirectToAction("Index");
     }
 }
