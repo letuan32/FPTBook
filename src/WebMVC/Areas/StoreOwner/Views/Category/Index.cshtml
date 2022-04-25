@@ -1,5 +1,4 @@
 @model WebMVC.ViewModels.Categories.Responses.CategoryIndexVm
-@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
 @{
     ViewBag.Title = "Category management";
@@ -32,6 +31,12 @@
                 <th scope="col">#</th>
                 <th scope="col">Name</th>
                 <th scope="col">Description</th>
+                <th scope="col">
+                    <a asp-action="Create" asp-controller="Category" class="btn btn-success text-white">
+                        <i class="fas fa-random"></i> New Category
+                    </a>
+                </th>
+
             </tr>
         </thead>
         <tbody>
@@ -55,3 +60,10 @@
 </div>
 
 
+<script>
+    // When the user clicks on <div>, open the popup
+    function myFunction() {
+      var popup = document.getElementById("myPopup");
+      popup.classList.toggle("show");
+    }
+</script>
