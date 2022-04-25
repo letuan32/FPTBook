@@ -8,7 +8,6 @@ namespace Infrastructure.Configurations
     {
         public void Configure(EntityTypeBuilder<OrderItem> entity)
         {
-            entity.ToTable("OrderItem");
 
             entity.HasOne(d => d.Book)
                     .WithMany(p => p.OrderItem)

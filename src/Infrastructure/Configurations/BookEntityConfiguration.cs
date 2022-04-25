@@ -9,7 +9,6 @@ namespace Infrastructure.Configurations
     {
         public void Configure(EntityTypeBuilder<Book> entity)
         {
-            entity.ToTable("Book");
 
             entity.Property(e => e.CreatedOn).HasColumnType("date");
 

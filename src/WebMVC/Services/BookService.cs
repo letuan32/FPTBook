@@ -30,7 +30,7 @@ public class BookService : IBookService
 
     public async Task<PaginatedList<BookIndexItemVm>> GetBookIndexAsync(GetBookIndexRequest request)
     {
-        var queryable = _context.Book.AsQueryable();
+        var queryable = _context.Books.AsQueryable();
 
         queryable = FilterQuery(request, queryable);
         // Sort
@@ -55,7 +55,7 @@ public class BookService : IBookService
 
     public async Task<List<SelectListItem>> GetCategoryTypesAsync()
     {
-        return await _context.Category
+        return await _context.Categories
             .Select(c => new SelectListItem
             {
                 Value = c.Id.ToString(),
@@ -74,7 +74,7 @@ public class BookService : IBookService
             book.ImageUrl = bookImagePath;
         }
 
-        await _context.Book.AddAsync(book);
+        await _context.Books.AddAsync(book);
         var result = await _context.SaveChangesAsync();
         return result;
     }
@@ -94,7 +94,7 @@ public class BookService : IBookService
 
     public async Task<BookDetailVm> GetBookDetailAsync(int id)
     {
-        var book = _context.Book
+        var book = _context.Books
             .Include(x => x.Category)
             .AsSplitQuery()
             .AsNoTracking()
@@ -118,7 +118,7 @@ public class BookService : IBookService
 
     public async Task<int> GetBookTotalSales(int id)
     {
-        return await _context.OrderItem
+        return await _context.OrderItems
             .Where(x => x.BookId == id)
             .AsNoTracking()
             .CountAsync();
@@ -127,7 +127,7 @@ public class BookService : IBookService
 
     public async Task<Book?> GetBookByIdAsync(int id)
     {
-        return await _context.Book.SingleOrDefaultAsync(x => x.Id == id);
+        return await _context.Books.SingleOrDefaultAsync(x => x.Id == id);
     }
 
     public async Task<int> DeleteAsync(int id)
@@ -135,7 +135,7 @@ public class BookService : IBookService
         var book = await GetBookByIdAsync(id);
         if (book != null)
         {
-            _context.Book.Remove(book);
+            _context.Books.Remove(book);
             return await _context.SaveChangesAsync();
         }
 
@@ -145,10 +145,10 @@ public class BookService : IBookService
     public async Task<IEnumerable<BookIndexItemVm>> GetRelatedBooksByCategoryAsync(int categoryId)
     {
         // TODO: Get random related records
-        var total = await _context.Book.CountAsync();
+        var total = await _context.Books.CountAsync();
         var rand = new Random();
         var toSkip = rand.Next(1, total-5 );
-        var relatedBooks = await _context.Book
+        var relatedBooks = await _context.Books
             .Skip(toSkip)
             .Take(5)
             .Select(x => new BookIndexItemVm()

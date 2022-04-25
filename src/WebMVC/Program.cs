@@ -15,7 +15,7 @@ var env = builder.Environment;
 string? connectionUrl;
 if (env.IsDevelopment())
 {
-    connectionUrl = builder.Configuration.GetConnectionString("DefaultConnectionUrl");
+    connectionUrl = builder.Configuration.GetConnectionString("pgUri");
 }
 else
 {
