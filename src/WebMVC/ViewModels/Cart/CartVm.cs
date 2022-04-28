@@ -1,7 +1,9 @@
-namespace WebMVC.Models.Cart;
+using WebMVC.Models.Cart;
+
+namespace WebMVC.ViewModels.Cart;
 
 public class CartVm
 {
     public int Id { get; set; }
-    public IEnumerable<CartItemVm> CartItems { get; set; } = null!;
+    public IEnumerable<CartItemVm>? Items { get; set; } = null!;
 }
