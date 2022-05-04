@@ -27,6 +27,7 @@ namespace Infrastructure.Database
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+            builder.HasDefaultSchema("fptbook");
 
             foreach (var entityType in builder.Model.GetEntityTypes())
             {

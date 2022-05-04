@@ -23,6 +23,12 @@ namespace Infrastructure.Configurations
                 .HasForeignKey(d => d.CategoryId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Book_Category");
+
+            entity.HasOne<User>(x => x.User)
+                .WithMany(x => x.Books)
+                .HasForeignKey(x => x.CreatedBy)
+                .OnDelete(DeleteBehavior.SetNull)
+                .IsRequired(false);
         }
     }
 }

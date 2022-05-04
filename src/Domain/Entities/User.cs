@@ -7,5 +7,6 @@ namespace Domain.Entities
         public string? Address { get; set; }
         
         public Cart Cart { get; set; }
+        public ICollection<Book> Books { get; set; }
     }
 }

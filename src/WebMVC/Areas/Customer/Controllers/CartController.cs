@@ -18,6 +18,6 @@ public class CartController : Controller
     public async Task<IActionResult> GetCart(CancellationToken cancellationToken)
     {
         var items = await _cartService.GetCartAsync(cancellationToken);
-        return Ok(items);
+        return View("Index",items);
     }
 }
