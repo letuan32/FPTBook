@@ -8,7 +8,6 @@ namespace Infrastructure.Configurations
     {
         public void Configure(EntityTypeBuilder<Order> entity)
         {
-            entity.ToTable("Order");
 
             entity.Property(e => e.OrderDate).HasColumnType("date");
         }

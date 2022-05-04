@@ -8,8 +8,6 @@ namespace Infrastructure.Configurations
     {
         public void Configure(EntityTypeBuilder<Category> entity)
         {
-            entity.ToTable("Category");
-
             entity.Property(e => e.CreatedOn).HasColumnType("date");
 
             entity.Property(e => e.Description).HasMaxLength(1000);
