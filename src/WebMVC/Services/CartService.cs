@@ -2,7 +2,6 @@ using System.Security.Claims;
 using Domain.Entities;
 using Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;
-using WebMVC.Models.Cart;
 using WebMVC.Services.Base;
 using WebMVC.ViewModels.Cart;
 

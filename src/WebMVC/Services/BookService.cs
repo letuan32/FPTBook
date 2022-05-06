@@ -101,6 +101,7 @@ public class BookService : IBookService
             .Where(x => x.Id == id)
             .Select(x => new BookDetailVm
             {
+                Id = x.Id,
                 Name = x.Name,
                 Description = x.Description,
                 CreatedDate = x.CreatedOn,

@@ -1,4 +1,3 @@
-using WebMVC.Models.Cart;
 using WebMVC.ViewModels.Cart;
 
 namespace WebMVC.Services.Base;

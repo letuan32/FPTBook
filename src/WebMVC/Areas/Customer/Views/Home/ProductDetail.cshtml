@@ -28,10 +28,26 @@
                     <h2 class="mt-5">
                         @Model.Price VND<small class="text-success"></small>
                     </h2>
-                    <button class="btn btn-dark btn-rounded mr-1" data-toggle="tooltip" title="" data-original-title="Add to cart">
-                        <i class="material-icons">
-                            shopping_cart
-                        </i>
+                    
+                    <div class="col-md-3 col-lg-3 col-xl-2 d-flex">
+                                      <button class="btn btn-link px-2"
+                                              onclick="this.parentNode.querySelector('input[type=number]').stepDown()">
+                                        <i class="fas fa-minus"></i>
+                                      </button>
+                    
+                                      <input id="addToCartQuantity" min="1" name="quantity" value="1" type="number"
+                                             class="form-control form-control-sm"/>
+                    
+                                      <button class="btn btn-link px-2"
+                                              onclick="this.parentNode.querySelector('input[type=number]').stepUp()">
+                                        <i class="fas fa-plus"></i>
+                                      </button>
+                                    </div>
+                    <button class="btn btn-dark btn-rounded mr-1"
+                            data-toggle="tooltip" title=""
+                            data-original-title="Add to cart"
+                            onclick="AddToCart(@Model.Id)">
+                            Add to Cart
                     </button>
                     <button class="btn btn-primary btn-rounded">Buy Now</button>
                     @*     <h3 class="box-title mt-5">Key Highlights</h3> *@
@@ -110,4 +126,32 @@
             color: #728299!important;
         }
     </style>
+
+    <script>
+    function AddToCart(productId) {
+        var quantity = document.getElementById("addToCartQuantity").value; 
+        console.log("Quantity: ", quantity)
+        var url = '@Url.Action("AddItemToCart", "Cart")'
+              $.ajax({
+             type: "POST",
+             contentType: 'application/json',
+             url: url,
+             data: JSON.stringify({ productId: productId, quantity:quantity}),
+             success: () => 
+             {
+                              console.log("Add item to cart")
+                              $.ajax({
+                                      url: "@Url.Action("RefreshViewComponent","Cart")",
+                                     
+                                          method: "GET",
+                                          success: function (data) {
+                                             $("#cart-navbar-item").html(data)                                      
+                                          }
+                                      });
+                                  }
+
+             })       
+                  }
+                 
+    </script>
 }

@@ -1,5 +1,3 @@
-using WebMVC.Models.Cart;
-
 namespace WebMVC.ViewModels.Cart;
 
 public class CartVm
