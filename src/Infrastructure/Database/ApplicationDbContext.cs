@@ -16,15 +16,18 @@ namespace Infrastructure.Database
 
         }
 
-        public virtual DbSet<Book> Book { get; set; }
-        public virtual DbSet<Category> Category { get; set; }
-        public virtual DbSet<Order> Order { get; set; }
-        public virtual DbSet<OrderHistory> OrderHistory { get; set; }
-        public virtual DbSet<OrderItem> OrderItem { get; set; }
+        public virtual DbSet<Book> Books { get; set; }
+        public virtual DbSet<Category> Categories { get; set; }
+        public virtual DbSet<Order> Orders { get; set; }
+        public virtual DbSet<OrderHistory> OrderHistories { get; set; }
+        public virtual DbSet<OrderItem> OrderItems { get; set; }
+        public virtual DbSet<Cart> Carts { get; set; }
+        public  virtual DbSet<CartItem> CartItems { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+            builder.HasDefaultSchema("fptbook");
 
             foreach (var entityType in builder.Model.GetEntityTypes())
             {
@@ -39,6 +42,7 @@ namespace Infrastructure.Database
             builder.ApplyConfiguration(new CategoryEntityConfiguration());
             builder.ApplyConfiguration(new OrderEntityConfiguration());
             builder.ApplyConfiguration(new OrderItemEntityConfiguration());
+            builder.ApplyConfiguration(new CartEntityConfiguration());
             SeedIdentity.Seeds(builder);
             SeedResourceData.Seeds(builder);
         }

@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Domain.Entities;
+using Infrastructure.Database;
 using Infrastructure.Utils;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
@@ -33,6 +34,8 @@ namespace WebMVC.Areas.Identity.Pages.Account
         private readonly IUserStore<User> _userStore;
         private readonly IUserEmailStore<User> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
+
+        private readonly ApplicationDbContext _context;
         // private readonly IEmailSender _emailSender;
 
         public RegisterModel(
@@ -41,7 +44,7 @@ namespace WebMVC.Areas.Identity.Pages.Account
             SignInManager<User> signInManager,
             ILogger<RegisterModel> logger,
             // IEmailSender emailSender, 
-            RoleManager<Role> roleManager)
+            RoleManager<Role> roleManager, ApplicationDbContext context)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -50,6 +53,7 @@ namespace WebMVC.Areas.Identity.Pages.Account
             _logger = logger;
             // _emailSender = emailSender;
             _roleManager = roleManager;
+            _context = context;
         }
 
         /// <summary>
@@ -137,12 +141,22 @@ namespace WebMVC.Areas.Identity.Pages.Account
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
                 var result = await _userManager.CreateAsync(user, Input.Password);
-                await _userManager.AddToRoleAsync(user, Input.RegisterRole);
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
-
+                    await _userManager.AddToRoleAsync(user, Input.RegisterRole);
                     var userId = await _userManager.GetUserIdAsync(user);
+
+                    var customerRoleId = await _context.Roles.FirstAsync(x => x.Name == RoleConstant.Customer);
+                    if (Input.RegisterRole == customerRoleId.ToString())
+                    { 
+                        await _context.Carts.AddAsync(new Cart()
+                        {
+                            UserId = user.Id
+                        });
+                        await _context.SaveChangesAsync();
+                        
+                    }
                     // var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     // code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
                     // var callbackUrl = Url.Page(
@@ -171,6 +185,7 @@ namespace WebMVC.Areas.Identity.Pages.Account
             }
 
             // If we got this far, something failed, redisplay form
+            RoleSelectListItems = GetRegisterRoles();
             return Page();
         }
 
@@ -195,6 +210,13 @@ namespace WebMVC.Areas.Identity.Pages.Account
                 throw new NotSupportedException("The default UI requires a user store with email support.");
             }
             return (IUserEmailStore<User>)_userStore;
+        }
+
+        private List<SelectListItem> GetRegisterRoles()
+        {
+            var roles =  _roleManager.Roles.Where(x=>x.Name!=RoleConstant.Admin).ToList();
+            return roles.Select(x => new SelectListItem() {Text = x.Name, Value = x.Name})
+                .ToList();
         }
     }
 }

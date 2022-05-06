@@ -15,7 +15,7 @@ var env = builder.Environment;
 string? connectionUrl;
 if (env.IsDevelopment())
 {
-    connectionUrl = builder.Configuration.GetConnectionString("DefaultConnectionUrl");
+    connectionUrl = builder.Configuration.GetConnectionString("pgUri");
 }
 else
 {
@@ -44,7 +44,10 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-    db.Database.Migrate();
+    if (db.Database.GetPendingMigrations().Any())
+    {
+        db.Database.Migrate();
+    }
 }
 
 // Configure the HTTP request pipeline.

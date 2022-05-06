@@ -4,6 +4,7 @@ namespace WebMVC.ViewModels.Books.Responses;
 
 public class BookDetailVm
 {
+    [ReadOnly(true)] public int Id { get; set; }
     [ReadOnly(true)] public string Name { get; set; } = null!;
 
     [ReadOnly(true)] public string Description { get; set; } = null!;
