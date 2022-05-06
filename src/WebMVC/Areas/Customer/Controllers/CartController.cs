@@ -28,6 +28,13 @@ public class CartController : Controller
         return Ok();
     }
 
+    [HttpPost]
+    public async Task<IActionResult> UpdateItem([FromBody]CartItemUpdateVm request, CancellationToken cancellationToken)
+    {
+        var isUpdated = await _cartService.UpdateCartItemAsync(request, cancellationToken);
+        return Ok();
+    }
+
     public IActionResult RefreshViewComponent()
     {
         return ViewComponent("CartNavbar");

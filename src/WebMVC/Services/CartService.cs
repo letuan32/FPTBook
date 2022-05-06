@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using Domain.Entities;
 using Infrastructure.Database;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebMVC.Services.Base;
 using WebMVC.ViewModels.Cart;
@@ -64,10 +65,12 @@ public class CartService : ICartService
         if (itemInCart != null)
         {
             itemInCart.Quantity = request.Quantity;
-            if (itemInCart.Quantity == 0) ;
-            _context.CartItems.Remove(itemInCart);
-        }
+            if (itemInCart.Quantity == 0)
+            {
+                _context.CartItems.Remove(itemInCart);
 
+            }
+        }
         return await _context.SaveChangesAsync(cancellationToken);
     }
 
@@ -93,6 +96,7 @@ public class CartService : ICartService
             .Select(t => new CartItemVm
             {
                 Id = t.cartItem.Id,
+                BookId = t.book.Id,
                 ImageUrl = t.book.ImageUrl,
                 Name = t.book.Name,
                 Price = t.book.Price,
