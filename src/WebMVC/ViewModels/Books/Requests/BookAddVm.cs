@@ -33,6 +33,8 @@ public class BookAddVm : IValidatableObject
     public string? ImageUrl { get; set; }
 
     [Display(Name = "Image File")] public IFormFile? ImageFile { get; set; }
+    
+    public int? CreatedBy { get; set; }
 
 
     public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)

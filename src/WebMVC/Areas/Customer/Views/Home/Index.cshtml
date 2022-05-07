@@ -23,7 +23,7 @@
             object-fit: cover;
         }
     </style>
-    
+
     <script>
      function AddToCart(productId) {
                 
@@ -36,17 +36,23 @@
                             data: JSON.stringify({ productId: productId}),
                             success: () => 
                             {
-                                             console.log("Add item to cart")
+                                
+                                            alert("Ok")
                                              $.ajax({
-                                                     url: "@Url.Action("RefreshViewComponent","Cart")",
+                                                     url: "@Url.Action("RefreshViewComponent", "Cart")",
                                                     
                                                          method: "GET",
                                                          success: function (data) {
-                                                            $("#cart-navbar-item").html(data)                                      
+                                                            $("#cart-navbar-item").html(data)  
+                                                                                             
                                                          }
                                                      });
+                                                 },
+                                                 error: ()=>
+                                                 {
+                                                    alert("Please login")    
                                                  }
-               
+
                             })       
                                  }
     </script>

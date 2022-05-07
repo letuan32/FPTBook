@@ -1,3 +1,5 @@
+using Infrastructure.Utils;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebMVC.Services.Base;
 using WebMVC.ViewModels.Cart;
@@ -5,6 +7,7 @@ using WebMVC.ViewModels.Cart;
 namespace WebMVC.Areas.Customer.Controllers;
 
 [Area("Customer")]
+[Authorize(Roles = RoleConstant.Customer)]
 public class CartController : Controller
 {
     private readonly ICartService _cartService;
@@ -15,6 +18,8 @@ public class CartController : Controller
     }
 
     [HttpGet]
+    [Route("/Cart")]
+    
     public async Task<IActionResult> GetCart(CancellationToken cancellationToken)
     {
         var items = await _cartService.GetCartAsync(cancellationToken);

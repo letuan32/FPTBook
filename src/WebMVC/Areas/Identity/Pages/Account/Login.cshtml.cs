@@ -6,9 +6,11 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Domain.Entities;
+using Infrastructure.Utils;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
@@ -22,11 +24,13 @@ namespace WebMVC.Areas.Identity.Pages.Account
     {
         private readonly SignInManager<User> _signInManager;
         private readonly ILogger<LoginModel> _logger;
+        private readonly UserManager<User> _userManager;
 
-        public LoginModel(SignInManager<User> signInManager, ILogger<LoginModel> logger)
+        public LoginModel(SignInManager<User> signInManager, ILogger<LoginModel> logger, UserManager<User> userManager)
         {
             _signInManager = signInManager;
             _logger = logger;
+            _userManager = userManager;
         }
 
         /// <summary>
@@ -116,7 +120,19 @@ namespace WebMVC.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
+
+                    var user = await _userManager.FindByNameAsync(Input.Email);
+                    if (await _userManager.IsInRoleAsync(user,RoleConstant.StoreOwner))
+                    {
+                        return Redirect("~/StoreOwner/Home/Index");
+                    }
+                    else
+                    {
+                        return RedirectToAction("Index", "Home",new { area = "Customer" });
+                    }
+                        
                     return LocalRedirect(returnUrl);
+                    
                 }
                 if (result.RequiresTwoFactor)
                 {

@@ -18,7 +18,12 @@
           @*         class="fas fa-angle-down mt-1"></i></a></p> *@
           @* </div> *@
         </div>
-        
+        @if (Model.Items.Count() == 0)
+        {
+          <h2>Cart Empty</h2>
+        }
+        else
+        {
            @foreach (var item in Model.Items)
                   {
                     <div class="card rounded-3 mb-4">
@@ -69,10 +74,12 @@
             <a type="button" class="btn btn-warning btn-block btn-lg"
                asp-action="Index",
                asp-controller="Order"
-               asp-area="Order"
-               >Payment</a>
+            >Payment</a>
           </div>
         </div>
+        }
+
+       
 
       </div>
     </div>

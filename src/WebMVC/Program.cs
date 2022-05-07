@@ -66,25 +66,21 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 // Routing
+
 app.UseEndpoints(endpoints =>
 {
     
     // endpoints.MapControllerRoute(
     //     name: "MyArea",
     //     pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
-    endpoints.MapAreaControllerRoute(
-        name: "StoreOwner",
-        areaName: "StoreOwner",
-        pattern: "StoreOwner/{controller=Home}/{action=Index}/{id?}");
+    // endpoints.MapAreaControllerRoute(
+    //     name: "StoreOwner",
+    //     areaName: "StoreOwner",
+    //     pattern: "StoreOwner/{controller=Home}/{action=Index}/{id?}");
 
     endpoints.MapAreaControllerRoute(
         name: "Customer",
         areaName: "Customer",
-        pattern: "{controller=Home}/{action=Index}/{id?}");
-    
-    endpoints.MapAreaControllerRoute(
-        name: "Order",
-        areaName: "Order",
         pattern: "{controller=Home}/{action=Index}/{id?}");
     // endpoints.MapControllerRoute(
     //     name: "default",

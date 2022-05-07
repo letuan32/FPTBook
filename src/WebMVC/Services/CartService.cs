@@ -113,6 +113,17 @@ public class CartService : ICartService
         };
     }
 
+    public async Task<int> ClearCartAsync(CancellationToken cancellationToken)
+    {
+        var cart = await _context.Carts
+            .Include(x => x.Items)
+            .FirstOrDefaultAsync(x => x.Id == CartId, cancellationToken: cancellationToken);
+        
+        cart.Items.Clear();
+
+        return await _context.SaveChangesAsync(cancellationToken);
+    }
+
     private int? GetCurrentUserId()
     {
         var userId = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;

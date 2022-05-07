@@ -16,7 +16,7 @@ namespace Infrastructure.Configurations
                     .HasConstraintName("FK_OrderItem_Book");
 
             entity.HasOne(d => d.Order)
-                .WithMany(p => p.OrderItem)
+                .WithMany(p => p.OrderItems)
                 .HasForeignKey(d => d.OrderId)
                 .HasConstraintName("FK_OrderItem_Order");
         }
