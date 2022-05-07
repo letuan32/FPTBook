@@ -386,5 +386,10 @@
       <_ContentIncludedByDefault Remove="Views\Home\Privacy.cshtml" />
     </ItemGroup>
 
+    <ItemGroup>
+      <AdditionalFiles Include="Areas\Order\Views\_ViewImports.cshtml" />
+      <AdditionalFiles Include="Areas\Order\Views\_ViewStart.cshtml" />
+    </ItemGroup>
+
 
 </Project>

@@ -99,7 +99,7 @@ public class CartService : ICartService
                 BookId = t.book.Id,
                 ImageUrl = t.book.ImageUrl,
                 Name = t.book.Name,
-                Price = t.book.Price,
+                Price = t.book.Price * t.cartItem.Quantity,
                 Quantity = t.cartItem.Quantity
             })
             .AsNoTracking()
