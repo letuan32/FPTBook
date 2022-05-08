@@ -8,6 +8,7 @@ using WebMVC.Services.Base;
 using WebMVC.ViewModels.Cart;
 using WebMVC.ViewModels.Checkouts;
 using WebMVC.ViewModels.Orders;
+using WebMVC.ViewModels.Orders.StoreOwner;
 
 namespace WebMVC.Services;
 
@@ -17,7 +18,7 @@ public class OrderService:IOrderService
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly SignInManager<User> _signInManager;
     private int UserId { get; }
-    private int CartId { get; }
+    
 
     public OrderService(IHttpContextAccessor httpContextAccessor, ApplicationDbContext context, UserManager<User> userManager, SignInManager<User> signInManager)
     {
@@ -25,12 +26,13 @@ public class OrderService:IOrderService
         _context = context;
         _signInManager = signInManager;
         UserId = GetCurrentUserId()!.Value;
-        CartId = GetUserCartId();
+        
     }
     public async Task<OrderCheckoutVm> GetOrderCheckoutAsync(CancellationToken cancellationToken)
     {
+        var cartId = GetUserCartId();
         var items = await _context.CartItems
-            .Where(c => c.CartId == CartId)
+            .Where(c => c.CartId == cartId)
             .Join(_context.Books, cartItem => cartItem.BookId, book => book.Id,
                 (cartItem, book) => new { cartItem, book })
             .Select(t => new OrderCheckoutItemVm()
@@ -60,8 +62,9 @@ public class OrderService:IOrderService
 
     public async Task<int> CreateOrderAsync(CancellationToken cancellationToken)
     {
+        var cartId = GetUserCartId();
         var cartItems = await _context.CartItems
-            .Where(c => c.CartId == CartId)
+            .Where(c => c.CartId == cartId)
             .Join(_context.Books, cartItem => cartItem.BookId, book => book.Id,
                 (cartItem, book) => new { cartItem, book })
             .Select(t => new CartItemVm
@@ -104,9 +107,25 @@ public class OrderService:IOrderService
         throw new NotImplementedException();
     }
 
-    public Task<StoreOrderHistoryVm> GetStoreOrderHistory()
+    public async Task<IEnumerable<StoreOrderHistoryItemVm>> GetStoreOrderHistoryAsync()
     {
-        throw new NotImplementedException();
+        var orderItems = await _context.Orders
+            .Include(x => x.OrderItems)
+            .ThenInclude(item => item.Book)
+            .Where(x=>x.OrderItems.Any(x=>x.Book.CreatedBy == UserId))
+            .Join(_context.Users, order => order.CustomerId, user => user.Id,
+                ((order, user) => new {order,user} ))
+            .Select(x => new StoreOrderHistoryItemVm()
+            {
+                OrderId = x.order.Id,
+                TotalItems = x.order.OrderItems.Count,
+                OrderedDate = x.order.OrderDate,
+                Price = x.order.Total,
+                Address = x.user.Address,
+                CustomerEmail = x.user.Email,
+            }).ToListAsync();
+
+        return orderItems;
     }
 
     public async Task<IEnumerable<OrderHistoryItemVm>> GetUserOrderHistoryAsync(CancellationToken cancellationToken)
@@ -153,6 +172,36 @@ public class OrderService:IOrderService
         };
         return orderDetailVm;
     }
+
+    public async Task<StoreOrderDetailVm> GetStoreOrderDetailAsync(int id)
+    {
+        var order = await _context.Orders.FirstOrDefaultAsync(x => x.Id == id);
+        var customer = await _context.Users.FirstOrDefaultAsync(x => x.Id == order.CustomerId);
+        var orderItems = await _context.OrderItems
+            .Where(o => o.OrderId == id && o.Book.CreatedBy == UserId)
+            .Join(_context.Books, orderItem => orderItem.BookId, book => book.Id,
+                ((item, book) => new { item, book }))
+            .Select(x => new OrderItemVm()
+            {
+                Id = x.item.Id,
+                BookId = x.book.Id,
+                ImageUrl = x.book.ImageUrl,
+                Name = x.book.Name,
+                Quantity = x.item.Quantity,
+                Price = x.item.Quantity*x.book.Price,
+            }).ToListAsync();
+
+        var orderDetailVm = new StoreOrderDetailVm()
+        {
+            OrderedDate = order.OrderDate,
+            TotalPrice = orderItems.Sum(x=>x.Price),
+            Items = orderItems,
+            Address = customer.Address,
+            CustomerEmail = customer.Email
+        };
+        return orderDetailVm;
+    }
+
     private int? GetCurrentUserId()
     {
         var userId = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;

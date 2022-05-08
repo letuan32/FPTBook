@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebMVC.Services.Base;
 
-namespace WebMVC.Areas.Order.Controllers;
+namespace WebMVC.Areas.Customer.Controllers;
 
 
 [Area("Customer")]

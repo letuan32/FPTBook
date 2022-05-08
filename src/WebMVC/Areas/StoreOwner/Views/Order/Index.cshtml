@@ -1,0 +1,58 @@
+@model IEnumerable<WebMVC.ViewModels.Orders.StoreOrderHistoryItemVm>
+
+@{
+    ViewBag.Title = "title";
+}
+
+<h2>Order History</h2>
+
+
+<table class="table table-hover">
+    <thead>
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.OrderedDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TotalItems)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CustomerEmail)
+        </th>
+         <th>
+                    @Html.DisplayNameFor(model => model.Address)
+                </th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var b in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => b.OrderedDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => b.TotalItems)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => b.CustomerEmail)
+            </td>
+             <td>
+                            @Html.DisplayFor(modelItem => b.Address)
+                        </td>
+            <td>
+                <div>
+                    <a class="btn btn-secondary text-white text-center" style="cursor:pointer"
+                       asp-action="Detail"
+                       asp-area="StoreOwner"
+                       asp-controller="Order"
+                       asp-route-id="@b.OrderId">
+                        Detail
+                    </a>
+                </div>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
