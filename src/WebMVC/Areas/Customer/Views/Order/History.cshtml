@@ -1,0 +1,50 @@
+@model IEnumerable<WebMVC.ViewModels.Orders.OrderHistoryItemVm>
+
+@{
+    ViewBag.Title = "Order History";
+
+}
+
+<h2>Order History</h2>
+
+<table class="table table-hover">
+    <thead>
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.OrderedDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TotalItems)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Price)
+        </th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var b in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => b.OrderedDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => b.TotalItems)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => b.Price)
+            </td>
+             <td>
+                 <div>
+ <a class="btn btn-secondary text-white text-center" style="cursor:pointer"
+                           asp-action="Detail"
+                           asp-route-id="@b.OrderId">
+                           Detail
+                        </a>
+                 </div>
+                        </td>
+        </tr>
+    }
+    </tbody>
+</table>

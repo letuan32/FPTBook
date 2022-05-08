@@ -11,6 +11,7 @@
 
     <ItemGroup>
         <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
+        <PackageReference Include="MailKit" Version="3.2.0" />
         <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
         <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.3" />
         <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.3" />
@@ -384,6 +385,13 @@
       <_ContentIncludedByDefault Remove="wwwroot\assets\scss\material-dashboard\_variables.scss" />
       <_ContentIncludedByDefault Remove="Views\Home\Index.cshtml" />
       <_ContentIncludedByDefault Remove="Views\Home\Privacy.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Order\Views\_ViewImports.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Order\Views\_ViewStart.cshtml" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <AdditionalFiles Include="Areas\Customer\Views\Order\Index.cshtml" />
+      <AdditionalFiles Include="Areas\Customer\Views\Order\OrderConfirm.cshtml" />
     </ItemGroup>
 
 

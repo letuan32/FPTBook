@@ -23,4 +23,37 @@
             object-fit: cover;
         }
     </style>
+
+    <script>
+     function AddToCart(productId) {
+                
+            
+                       var url = '@Url.Action("AddItemToCart", "Cart")'
+                             $.ajax({
+                            type: "POST",
+                            contentType: 'application/json',
+                            url: url,
+                            data: JSON.stringify({ productId: productId}),
+                            success: () => 
+                            {
+                                
+                                            alert("Ok")
+                                             $.ajax({
+                                                     url: "@Url.Action("RefreshViewComponent", "Cart")",
+                                                    
+                                                         method: "GET",
+                                                         success: function (data) {
+                                                            $("#cart-navbar-item").html(data)  
+                                                                                             
+                                                         }
+                                                     });
+                                                 },
+                                                 error: ()=>
+                                                 {
+                                                    alert("Please login")    
+                                                 }
+
+                            })       
+                                 }
+    </script>
 }

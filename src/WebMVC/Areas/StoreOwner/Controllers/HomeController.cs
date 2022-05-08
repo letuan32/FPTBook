@@ -1,4 +1,6 @@
 using System.Diagnostics;
+using Infrastructure.Utils;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebMVC.Models;
 using WebMVC.Services;
@@ -6,7 +8,7 @@ using WebMVC.Services;
 namespace WebMVC.Areas.StoreOwner.Controllers;
 
 [Area("StoreOwner")]
-
+[Authorize(Roles = RoleConstant.StoreOwner)]
 public class HomeController : Controller
 {
     
@@ -15,6 +17,7 @@ public class HomeController : Controller
         
     }
 
+   
     public IActionResult Index()
     {
         return View();

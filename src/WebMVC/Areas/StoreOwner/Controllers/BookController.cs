@@ -1,5 +1,9 @@
+using System.Security.Claims;
 using AutoMapper;
 using Domain.Entities;
+using Infrastructure.Utils;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using WebMVC.Models.Books.Requests;
 using WebMVC.Models.Pagination;
@@ -11,21 +15,28 @@ using WebMVC.ViewModels.Books.Utils;
 namespace WebMVC.Areas.StoreOwner.Controllers;
 
 [Area("StoreOwner")]
+[Authorize(Roles = RoleConstant.StoreOwner)]
 public class BookController : Controller
 {
     private readonly IBookService _bookService;
     private readonly IMapper _mapper;
+    private readonly SignInManager<User> _signInManager;
 
-    public BookController(IBookService bookService, IMapper mapper)
+    public BookController(IBookService bookService, IMapper mapper, SignInManager<User> signInManager)
     {
         _bookService = bookService;
         _mapper = mapper;
+        _signInManager = signInManager;
     }
 
     [HttpGet]
+
     public async Task<IActionResult> Index([FromQuery] GetBookIndexRequest request)
     {
+        
         request.PageSize = BookIndexOption.PageSize;
+        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)) ;
+        request.CreatedBy = userId;
         var books = await _bookService.GetBookIndexAsync(request);
         var vm = new BookIndexVm
         {
@@ -95,9 +106,10 @@ public class BookController : Controller
         {
             if (ModelState.IsValid)
             {
+                var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)) ;
+                bookAddVm.CreatedBy = userId;
                 var isCreated = await _bookService.AddSingleAsync(bookAddVm);
-                if (isCreated == 1) return RedirectToAction("Index");
-
+                if (isCreated != 0) return RedirectToAction("Index");
                 return View("Book/Create", bookAddVm);
             }
         }

@@ -2,6 +2,7 @@
 using AutoMapper;
 using Domain.Entities;
 using Infrastructure.Database;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using WebMVC.Models.Books.Requests;
@@ -19,19 +20,22 @@ public class BookService : IBookService
     private readonly ApplicationDbContext _context;
     private readonly IFileStorageService _fileStorageService;
     private readonly IMapper _mapper;
+    private readonly SignInManager<User> _signInManager;
 
 
-    public BookService(ApplicationDbContext context, IMapper mapper, IFileStorageService fileStorageService)
+    public BookService(ApplicationDbContext context, IMapper mapper, IFileStorageService fileStorageService, SignInManager<User> signInManager)
     {
         _context = context;
         _mapper = mapper;
         _fileStorageService = fileStorageService;
+        _signInManager = signInManager;
     }
 
     public async Task<PaginatedList<BookIndexItemVm>> GetBookIndexAsync(GetBookIndexRequest request)
     {
+      
         var queryable = _context.Books.AsQueryable();
-
+        
         queryable = FilterQuery(request, queryable);
         // Sort
         queryable = SortingQuery(request, queryable);
@@ -66,6 +70,7 @@ public class BookService : IBookService
 
     public async Task<int> AddSingleAsync(BookAddVm bookAddVm)
     {
+        
         var book = _mapper.Map<BookAddVm, Book>(bookAddVm);
         if (bookAddVm.ImageFile != null)
         {
@@ -101,6 +106,7 @@ public class BookService : IBookService
             .Where(x => x.Id == id)
             .Select(x => new BookDetailVm
             {
+                Id = x.Id,
                 Name = x.Name,
                 Description = x.Description,
                 CreatedDate = x.CreatedOn,
@@ -168,6 +174,10 @@ public class BookService : IBookService
 
     private static IQueryable<Book> FilterQuery(GetBookIndexRequest request, IQueryable<Book> queryable)
     {
+        if (request.CreatedBy.HasValue)
+        {
+            queryable = queryable.Where(book => book.CreatedBy == request.CreatedBy);
+        }
         if (request.FilterOption.HasValue)
             queryable = queryable.Where(book => book.CategoryId == request.FilterOption.Value);
 

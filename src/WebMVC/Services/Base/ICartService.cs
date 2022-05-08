@@ -1,4 +1,3 @@
-using WebMVC.Models.Cart;
 using WebMVC.ViewModels.Cart;
 
 namespace WebMVC.Services.Base;
@@ -12,4 +11,5 @@ public interface ICartService
     Task<int> RemoveItemInCartAsync(int itemId, CancellationToken cancellationToken);
     Task<int> GetTotalCartItems();
     Task<CartVm> GetCartAsync(CancellationToken cancellationToken);
+    Task<int> ClearCartAsync(CancellationToken cancellationToken);
 }

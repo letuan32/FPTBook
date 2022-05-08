@@ -10,7 +10,7 @@ namespace Domain.Entities
     {
         public Order()
         {
-            OrderItem = new HashSet<OrderItem>();
+            OrderItems = new HashSet<OrderItem>();
         }
 
         public int CustomerId { get; set; }
@@ -18,6 +18,6 @@ namespace Domain.Entities
         public OrderState State { get; set; }
         public int Total { get; set; }
 
-        public virtual ICollection<OrderItem> OrderItem { get; set; }
+        public virtual ICollection<OrderItem> OrderItems { get; set; }
     }
 }

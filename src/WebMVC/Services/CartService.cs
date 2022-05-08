@@ -1,8 +1,8 @@
 using System.Security.Claims;
 using Domain.Entities;
 using Infrastructure.Database;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using WebMVC.Models.Cart;
 using WebMVC.Services.Base;
 using WebMVC.ViewModels.Cart;
 
@@ -65,10 +65,12 @@ public class CartService : ICartService
         if (itemInCart != null)
         {
             itemInCart.Quantity = request.Quantity;
-            if (itemInCart.Quantity == 0) ;
-            _context.CartItems.Remove(itemInCart);
-        }
+            if (itemInCart.Quantity == 0)
+            {
+                _context.CartItems.Remove(itemInCart);
 
+            }
+        }
         return await _context.SaveChangesAsync(cancellationToken);
     }
 
@@ -94,9 +96,10 @@ public class CartService : ICartService
             .Select(t => new CartItemVm
             {
                 Id = t.cartItem.Id,
+                BookId = t.book.Id,
                 ImageUrl = t.book.ImageUrl,
                 Name = t.book.Name,
-                Price = t.book.Price,
+                Price = t.book.Price * t.cartItem.Quantity,
                 Quantity = t.cartItem.Quantity
             })
             .AsNoTracking()
@@ -108,6 +111,17 @@ public class CartService : ICartService
             Id = CartId,
             Items = items
         };
+    }
+
+    public async Task<int> ClearCartAsync(CancellationToken cancellationToken)
+    {
+        var cart = await _context.Carts
+            .Include(x => x.Items)
+            .FirstOrDefaultAsync(x => x.Id == CartId, cancellationToken: cancellationToken);
+        
+        cart.Items.Clear();
+
+        return await _context.SaveChangesAsync(cancellationToken);
     }
 
     private int? GetCurrentUserId()

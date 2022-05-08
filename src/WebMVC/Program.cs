@@ -2,6 +2,7 @@
 using System.Reflection;
 using System.Security.Policy;
 using Domain.Entities;
+using Domain.Settings;
 using Infrastructure.Database;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.CodeAnalysis;
@@ -27,7 +28,8 @@ else
 }
 ServiceExtensions.AddDbContext(connectionUrl, builder);
 ServiceExtensions.AddServices(builder);
-
+var mailSettingSection = builder.Configuration.GetSection("MailSetting");
+builder.Services.Configure<MailSetting>(mailSettingSection);
 builder.Services.AddIdentity<User, Role>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultUI();
@@ -35,6 +37,8 @@ builder.Services.AddIdentity<User, Role>()
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
+
+
 
 
 
@@ -66,6 +70,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 // Routing
+
 app.UseEndpoints(endpoints =>
 {
     

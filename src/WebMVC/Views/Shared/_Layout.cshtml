@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+﻿@using Domain.Entities
+@using Infrastructure.Utils
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8"/>
@@ -10,6 +14,8 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
           rel="stylesheet">
 </head>
+@inject SignInManager<User> SignInManager
+@inject UserManager<User> UserManager
 <body>
 <header class="sticky-lg-top"  >
     <nav class="navbar navbar-fixed-top navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3 ">
@@ -22,14 +28,37 @@
             </button>
             <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                 <ul class="navbar-nav flex-grow-1">
-                    <li class="nav-item">
-                        @* <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a> *@
-                        @Html.ActionLink("Home", "Index", "Home")
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                    </li>
-                    @await Component.InvokeAsync("CartNavbar")
+                    
+                    @if (User.IsInRole(RoleConstant.Customer))
+                    {  
+                        <li class="nav-item">
+                           @* <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a> *@
+                          <a class="nav-link text-dark" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
+                       </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="Customer" asp-controller="Order" asp-action="History">Order History</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                        </li>
+                        <li id="cart-navbar-item" class="nav-item">
+                            @await Component.InvokeAsync("CartNavbar")
+                        </li>
+                    }
+                    @if (User.IsInRole(RoleConstant.StoreOwner))
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="~/StoreOwner/Home/Index">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="StoreOwner" asp-controller="Book" asp-action="Index">Book</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="StoreOwner" asp-controller="Order" asp-action="Index">History</a>
+                        </li>
+                    }
+                   
+                  
                 </ul>
                 <partial name="_LoginPartial"/>
             </div>

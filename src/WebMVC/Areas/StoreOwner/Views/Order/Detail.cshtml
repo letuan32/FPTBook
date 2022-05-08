@@ -1,0 +1,44 @@
+@model WebMVC.ViewModels.Orders.StoreOwner.StoreOrderDetailVm
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+}
+
+<h2>Order Detail</h2>
+<div class="card">
+    <div class="row">
+        <div class="col-md-8 cart">
+            <div class="title">
+            </div>  
+            @foreach (var item in Model.Items)
+            {
+                <div class="row">
+                    <div class="row main align-items-center">
+                        <div class="col-2"><img class="img-fluid" src="@item.ImageUrl"></div>
+                        <div class="col">
+                            <div class="row text-muted">@item.Name</div>
+                              
+                        </div>
+                        <div class="col">
+                            @item.Quantity
+                        </div>
+                        <div class="col"><span class="close">&#10005;</span> @item.Price </div>
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="col-md-4 summary">
+            <div><h5><b>Summary</b></h5></div>
+            <hr>
+            <form>  
+                <p>Customer Email: @Model.CustomerEmail</p>
+                                 <p>Customer Email: @Model.Address</p>
+                <p>Total: @Model.TotalPrice</p>
+                <p>Orderd Date: @Model.OrderedDate</p>
+                
+            </form>
+        </div>
+    </div>
+            
+</div>

@@ -19,7 +19,7 @@ public class CartNavbarViewComponent:ViewComponent
         _serviceScopeFactory = serviceScopeFactory;
     }
     
-    public async Task<IViewComponentResult> InvokeAsync(int categoryId)
+    public async Task<IViewComponentResult> InvokeAsync()
     {
         var cartItemsCount = 0;
         if (_signInManager.IsSignedIn(Request.HttpContext.User))

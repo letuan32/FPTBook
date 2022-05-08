@@ -10,6 +10,8 @@ namespace Infrastructure.Configurations
         {
 
             entity.Property(e => e.OrderDate).HasColumnType("date");
+            
+            
         }
     }
 }
