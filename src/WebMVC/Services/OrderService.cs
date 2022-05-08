@@ -97,8 +97,8 @@ public class OrderService:IOrderService
             OrderItems = orderItems,
             Total = totalPrice
         };
-        await _context.AddAsync(Order);
-        return await _context.SaveChangesAsync();
+        await _context.AddAsync(Order, cancellationToken);
+        return await _context.SaveChangesAsync(cancellationToken);
         
     }
 

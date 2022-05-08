@@ -1,4 +1,6 @@
+using Domain.Settings;
 using Infrastructure.Database;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using WebMVC.Services;
 using WebMVC.Services.Base;
@@ -28,5 +30,6 @@ public static class ServiceExtensions
         // Automapper
         builder.Services.AddAutoMapper(typeof(Program).Assembly);
         builder.Services.AddScoped<IFileStorageService, FileStorageService>();
+        builder.Services.AddScoped<IEmailService,EmailService>();
     }
 }

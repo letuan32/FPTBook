@@ -1,7 +1,10 @@
+using Domain.Entities;
 using Infrastructure.Utils;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using WebMVC.Services.Base;
+using WebMVC.ViewModels.Mails;
 
 namespace WebMVC.Areas.Customer.Controllers;
 
@@ -11,10 +14,14 @@ public class OrderController: Controller
 {
     private readonly IOrderService _orderService;
     private readonly ICartService _cartService;
-    public OrderController(IOrderService orderService, ICartService cartService)
+    private readonly IEmailService _emailService;
+    private readonly UserManager<User> _userManager;
+    public OrderController(IOrderService orderService, ICartService cartService, IEmailService emailService, UserManager<User> userManager)
     {
         _orderService = orderService;
         _cartService = cartService;
+        _emailService = emailService;
+        _userManager = userManager;
     }
 
     [HttpGet]
@@ -37,6 +44,16 @@ public class OrderController: Controller
         if (isOrderCreated != 0)
         {
             await _cartService.ClearCartAsync(cancellationToken);
+            var email = User.Identity?.Name ?? "";
+            var emailRequest = new SendEmailRequest()
+            {
+                To = new List<string>() { email },
+                Subject = "Confirm order",
+                Body =
+                    "FPT Book đã nhận được yêu cầu đặt hàng của bạn và đang xử lý nhé. Bạn sẽ nhận được thông báo tiếp theo khi đơn hàng đã sẵn sàng được giao. "
+
+            };
+            _emailService.SendEmail(emailRequest);
         }
         return View();
     }
