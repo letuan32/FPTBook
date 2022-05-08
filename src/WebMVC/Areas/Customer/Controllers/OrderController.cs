@@ -44,12 +44,15 @@ public class OrderController: Controller
     [Route("/[Controller]/History")]
     public async Task<IActionResult> History(CancellationToken cancellationToken)
     {
-        var isOrderCreated = await _orderService.CreateOrderAsync(cancellationToken);
-        if (isOrderCreated != 0)
-        {
-            await _cartService.ClearCartAsync(cancellationToken);
-        }
-        return View();
+        var orderHitoriesVm = await _orderService.GetUserOrderHistoryAsync(cancellationToken);
+        return View(orderHitoriesVm);
+    }
+    [Authorize(Roles = RoleConstant.Customer)]
+    [Route("/[Controller]/Detail")]
+    public async Task<IActionResult> Detail(int id,CancellationToken cancellationToken)
+    {
+        var orderDetail = await _orderService.GetOrderDetailAsync(id);
+        return View(orderDetail);
     }
     
 }

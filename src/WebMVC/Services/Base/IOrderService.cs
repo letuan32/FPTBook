@@ -10,6 +10,6 @@ public interface IOrderService
     Task<int> CreateOrderAsync(CancellationToken cancellationToken);
     Task<int> UpdateOrderStatus(int orderId, OrderState state);
     Task<StoreOrderHistoryVm> GetStoreOrderHistory();
-    Task<UserOrderHistoryVm> GetUserOrderHistory();
-    Task<OrderDetailVm> GetOrderDetail();
+    Task<IEnumerable<OrderHistoryItemVm>> GetUserOrderHistoryAsync(CancellationToken cancellationToken);
+    Task<OrderDetailVm> GetOrderDetailAsync(int id);
 }

@@ -109,14 +109,49 @@ public class OrderService:IOrderService
         throw new NotImplementedException();
     }
 
-    public Task<UserOrderHistoryVm> GetUserOrderHistory()
+    public async Task<IEnumerable<OrderHistoryItemVm>> GetUserOrderHistoryAsync(CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+
+        var orderItems = await _context.Orders
+            .AsNoTracking()
+            .Include(x => x.OrderItems)
+            .Select(x => new OrderHistoryItemVm()
+            {
+                OrderId = x.Id,
+                TotalItems = x.OrderItems.Count,
+                OrderedDate = x.OrderDate,
+                Price = x.Total
+            }).ToListAsync(cancellationToken: cancellationToken);
+
+
+       
+        return orderItems;
     }
 
-    public Task<OrderDetailVm> GetOrderDetail()
+    public async Task<OrderDetailVm> GetOrderDetailAsync(int id)
     {
-        throw new NotImplementedException();
+        var order = await _context.Orders.FirstOrDefaultAsync(x => x.Id == id);
+        var orderItems = await _context.OrderItems
+            .Where(o => o.OrderId == id)
+            .Join(_context.Books, orderItem => orderItem.BookId, book => book.Id,
+                ((item, book) => new { item, book }))
+            .Select(x => new OrderItemVm()
+            {
+                Id = x.item.Id,
+                BookId = x.book.Id,
+                ImageUrl = x.book.ImageUrl,
+                Name = x.book.Name,
+                Quantity = x.item.Quantity,
+                Price = x.item.Quantity*x.book.Price,
+            }).ToListAsync();
+
+        var orderDetailVm = new OrderDetailVm()
+        {
+            OrderedDate = order.OrderDate,
+            TotalPrice = order.Total,
+            Items = orderItems,
+        };
+        return orderDetailVm;
     }
     private int? GetCurrentUserId()
     {
