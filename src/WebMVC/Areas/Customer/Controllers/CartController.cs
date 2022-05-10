@@ -1,3 +1,4 @@
+using Infrastructure.Database;
 using Infrastructure.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -11,10 +12,12 @@ namespace WebMVC.Areas.Customer.Controllers;
 public class CartController : Controller
 {
     private readonly ICartService _cartService;
+    private readonly ApplicationDbContext _context;
     
-    public CartController(ICartService cartService)
+    public CartController(ICartService cartService, ApplicationDbContext context)
     {
         _cartService = cartService;
+        _context = context;
     }
 
     [HttpGet]
@@ -29,6 +32,11 @@ public class CartController : Controller
     [HttpPost]
     public async Task<IActionResult> AddItemToCart([FromBody]CartItemAddVm request, CancellationToken cancellationToken)
     {
+        var book = _context.Books.Find(request.ProductId);
+        if (book.Quantity == 0)
+        {
+            return BadRequest();
+        }
         var response = await _cartService.AddItemToCartAsync(request, cancellationToken);
         return Ok();
     }
@@ -36,6 +44,15 @@ public class CartController : Controller
     [HttpPost]
     public async Task<IActionResult> UpdateItem([FromBody]CartItemUpdateVm request, CancellationToken cancellationToken)
     {
+        var item = await _context.CartItems.FindAsync(request.Id);
+
+        var book = await _context.Books.FindAsync(item.BookId);
+
+        if (request.Quantity > book.Quantity)
+        {
+            return BadRequest();
+        }
+        
         var isUpdated = await _cartService.UpdateCartItemAsync(request, cancellationToken);
         return Ok();
     }
